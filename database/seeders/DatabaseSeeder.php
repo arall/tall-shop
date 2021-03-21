@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             ProductVariatSeeder::class,
             ProductSeeder::class,
             ShippingCarrierSeeder::class,
+            PaymentMethodSeeder::class,
         ]);
     }
 }

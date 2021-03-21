@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Shop;
 
 use App\Helpers\Cart;
+use App\Models\PaymentMethod;
 use Livewire\Component;
 use PragmaRX\Countries\Package\Countries;
 use App\Models\User;
@@ -15,6 +16,8 @@ class Checkout extends Component
     public Profile $profile;
     public $shippingCarriers;
     public $shippingCarrierId;
+    public $paymentMethods;
+    public $paymentMethodId;
     public $price;
 
     protected $rules = [
@@ -37,6 +40,7 @@ class Checkout extends Component
         }
         $this->profile = $profile;
         $this->shippingCarriers = ShippingCarrier::all();
+        $this->paymentMethods = PaymentMethod::all();
         $this->calculateTotalPrice();
     }
 
@@ -48,19 +52,22 @@ class Checkout extends Component
 
     public function saveAddress()
     {
+        $this->validate();
+
         $this->user->save();
         $this->profile->save();
     }
 
-    /**
-     * Calculate the total price.
-     */
     public function calculateTotalPrice()
     {
         $this->price = Cart::getTotalPrice();
         $shippingCarrier = ShippingCarrier::find($this->shippingCarrierId);
         if ($shippingCarrier) {
             $this->price += $shippingCarrier->total_price;
+        }
+        $paymentMethod = PaymentMethod::find($this->paymentMethodId);
+        if ($paymentMethod) {
+            $this->price += $paymentMethod->total_price;
         }
     }
 }

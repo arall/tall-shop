@@ -14,7 +14,7 @@
                             </label>
                             <div class="mt-1">
                                 <x-input.text id="firstname" wire:model="user.name" />
-                                @error('user.name') <span class="error">{{ $message }}</span> @enderror
+                                @error('user.name') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
                         </div>
 
@@ -24,7 +24,7 @@
                             </label>
                             <div class="mt-1">
                                 <x-input.text id="lastname" wire:model="profile.lastname" />
-                                @error('profile.lastname') <span class="error">{{ $message }}</span> @enderror
+                                @error('profile.lastname') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
                         </div>
 
@@ -34,7 +34,7 @@
                             </label>
                             <div class="mt-1">
                                 <x-input.text id="phone" wire:model="profile.phone" />
-                                @error('profile.phone') <span class="error">{{ $message }}</span> @enderror
+                                @error('profile.phone') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
                         </div>
 
@@ -50,7 +50,7 @@
                                         </option>
                                     @endforeach
                                 </x-input.select>
-                                @error('profile.country') <span class="error">{{ $message }}</span> @enderror
+                                @error('profile.country') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
                         </div>
 
@@ -60,7 +60,7 @@
                             </label>
                             <div class="mt-1">
                                 <x-input.text id="address" wire:model="profile.address" />
-                                @error('profile.address') <span class="error">{{ $message }}</span> @enderror
+                                @error('profile.address') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
                         </div>
 
@@ -70,7 +70,7 @@
                             </label>
                             <div class="mt-1">
                                 <x-input.text id="city" wire:model="profile.city" />
-                                @error('profile.city') <span class="error">{{ $message }}</span> @enderror
+                                @error('profile.city') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
                         </div>
 
@@ -80,7 +80,7 @@
                             </label>
                             <div class="mt-1">
                                 <x-input.text id="state" wire:model="profile.region" />
-                                @error('profile.region') <span class="error">{{ $message }}</span> @enderror
+                                @error('profile.region') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
                         </div>
 
@@ -90,7 +90,7 @@
                             </label>
                             <div class="mt-1">
                                 <x-input.text id="zip" wire:model="profile.zip" />
-                                @error('profile.zip') <span class="error">{{ $message }}</span> @enderror
+                                @error('profile.zip') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
                         </div>
                     </div>
@@ -108,49 +108,91 @@
                 <h3 class="text-lg leading-6 font-medium text-gray-900">
                     {{ __('Shipping method') }}
                 </h3>
-                <form wire:submit.prevent="saveShipment">
-                    <div class="mt-6">
-                        <ul class="relative bg-white rounded-md -space-y-px" x-ref="radiogroup">
-                            @foreach ($shippingCarriers as $shippingCarrier)
-                                <li>
-                                    <div :class="{ 'border-gray-200': !(active === 0), 'bg-indigo-50 border-indigo-200 z-10': active === 0 }"
-                                        class="relative border @if($loop->first) {{ 'rounded-tl-md rounded-tr-md' }} @elseif($loop->last) {{ 'rounded-bl-md rounded-br-md' }} @endif
-                                        p-4 flex flex-col md:pl-4 md:pr-6 md:grid md:grid-cols-3 border-gray-200">
-                                        <label class="flex items-center text-sm cursor-pointer" wire:click="calculateTotalPrice" >
-                                            <input wire:model="shippingCarrierId" name="shipping" type="radio" value="{{ $shippingCarrier->id }}"
-                                                class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 cursor-pointer border-gray-300"
-                                                aria-describedby="plan-option-pricing-0 plan-option-limit-0">
-                                            <span class="ml-3 font-medium text-gray-900">
-                                                {{ $shippingCarrier->name }}
-                                            </span>
-                                        </label>
+                <div class="mt-6">
+                    <ul class="relative bg-white rounded-md -space-y-px" x-ref="radiogroup">
+                        @foreach ($shippingCarriers as $shippingCarrier)
+                            <li>
+                                <div :class="{ 'border-gray-200': !(active === 0), 'bg-indigo-50 border-indigo-200 z-10': active === 0 }"
+                                    class="relative border @if($loop->first) {{ 'rounded-tl-md rounded-tr-md' }} @elseif($loop->last) {{ 'rounded-bl-md rounded-br-md' }} @endif
+                                    p-4 flex flex-col md:pl-4 md:pr-6 md:grid md:grid-cols-3 border-gray-200">
+                                    <label class="flex items-center text-sm cursor-pointer" wire:click="calculateTotalPrice" >
+                                        <input wire:model="shippingCarrierId" name="shipping" type="radio" value="{{ $shippingCarrier->id }}"
+                                            class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 cursor-pointer border-gray-300"
+                                            aria-describedby="plan-option-pricing-0 plan-option-limit-0">
+                                        <span class="ml-3 font-medium text-gray-900">
+                                            {{ $shippingCarrier->name }}
+                                        </span>
+                                    </label>
+                                    <p id="plan-option-pricing-0"
+                                        class="ml-6 pl-1 text-sm md:ml-0 md:pl-0 md:text-center">
+                                        <span
+                                            :class="{ 'text-indigo-900': active === 0, 'text-gray-900': !(active === 0) }"
+                                            class="font-medium text-gray-900">
+                                            @price($shippingCarrier->total_price)
+                                        </span>
+                                    </p>
+                                    <p id="plan-option-limit-0"
+                                        :class="{ 'text-indigo-700': active === 0, 'text-gray-500': !(active === 0) }"
+                                        class="ml-6 pl-1 text-sm md:ml-0 md:pl-0 md:text-right text-gray-500">
+                                        {{ $shippingCarrier->eta }} {{ __('Hours') }}
+                                    </p>
+                                </div>
+                            </li>
+                        @endforeach
+                    </ul>
+
+                    <div class="pt-5">
+                        <div class="flex justify-end">
+                            <x-button.primary type="submit">
+                                {{ __('Save') }}
+                            </x-button.primary>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                    {{ __('Payment method') }}
+                </h3>
+                <div class="mt-6">
+                    <ul class="relative bg-white rounded-md -space-y-px" x-ref="radiogroup">
+                        @foreach ($paymentMethods as $paymentMethod)
+                            <li>
+                                <div :class="{ 'border-gray-200': !(active === 0), 'bg-indigo-50 border-indigo-200 z-10': active === 0 }"
+                                    class="relative border @if($loop->first) {{ 'rounded-tl-md rounded-tr-md' }} @elseif($loop->last) {{ 'rounded-bl-md rounded-br-md' }} @endif
+                                    p-4 flex flex-col md:pl-4 md:pr-6 md:grid md:grid-cols-3 border-gray-200">
+                                    <label class="flex items-center text-sm cursor-pointer" wire:click="calculateTotalPrice" >
+                                        <input wire:model="paymentMethodId" name="shipping" type="radio" value="{{ $paymentMethod->id }}"
+                                            class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 cursor-pointer border-gray-300"
+                                            aria-describedby="plan-option-pricing-0 plan-option-limit-0">
+                                        <span class="ml-3 font-medium text-gray-900">
+                                            {{ $paymentMethod->name }}
+                                        </span>
+                                    </label>
+                                    @if($paymentMethod->price > 0)
                                         <p id="plan-option-pricing-0"
                                             class="ml-6 pl-1 text-sm md:ml-0 md:pl-0 md:text-center">
                                             <span
                                                 :class="{ 'text-indigo-900': active === 0, 'text-gray-900': !(active === 0) }"
                                                 class="font-medium text-gray-900">
-                                                @price($shippingCarrier->total_price)
+                                                @price($paymentMethod->total_price)
                                             </span>
                                         </p>
-                                        <p id="plan-option-limit-0"
-                                            :class="{ 'text-indigo-700': active === 0, 'text-gray-500': !(active === 0) }"
-                                            class="ml-6 pl-1 text-sm md:ml-0 md:pl-0 md:text-right text-gray-500">
-                                            {{ $shippingCarrier->eta }} {{ __('Hours') }}
-                                        </p>
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ul>
+                                    @endif
+                                </div>
+                            </li>
+                        @endforeach
+                    </ul>
 
-                        <div class="pt-5">
-                            <div class="flex justify-end">
-                                <x-button.primary type="submit">
-                                    {{ __('Save') }}
-                                </x-button.primary>
-                            </div>
+                    <div class="pt-5">
+                        <div class="flex justify-end">
+                            <x-button.primary type="submit">
+                                {{ __('Save') }}
+                            </x-button.primary>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
 
         </div>

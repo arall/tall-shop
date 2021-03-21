@@ -18,11 +18,8 @@ class CreatePaymentMethodsTable extends Migration
             $table->boolean('status')->default(false);
             $table->string('name');
             $table->decimal('price')->default(0)->nullable();
-            $table->decimal('price_kg')->default(0)->nullable();
             $table->decimal('tax')->default(0)->nullable();
             $table->decimal('total_price')->default(0)->nullable();
-            $table->decimal('total_price_kg')->default(0)->nullable();
-            $table->string('eta')->nullable();
             $table->timestamps();
         });
     }
