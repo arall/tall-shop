@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Blade;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,5 +27,13 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::defaultView('pagination::default');
         Paginator::defaultSimpleView('pagination::simple-default');
+
+        Blade::directive('price', function ($expression) {
+            return "<?php echo number_format(($expression), 2, ',', '.') . '€' ?>";
+        });
+
+        Blade::directive('markdown', function ($expression) {
+            return "<?php echo GrahamCampbell\Markdown\Facades\Markdown::convertToHtml($expression); ?>";
+        });
     }
 }

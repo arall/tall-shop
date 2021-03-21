@@ -21,8 +21,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/', 'welcome')->name('home');
+Route::get('/', function () {
+    return view('welcome');
+})->name('home');
 
+/**
+ * Auth
+ */
 Route::middleware('guest')->group(function () {
     Route::get('login', Login::class)
         ->name('login');
@@ -53,4 +58,14 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', LogoutController::class)
         ->name('logout');
+});
+
+/**
+ * Shop
+ */
+Route::get('/products', App\Http\Livewire\Shop\Products::class)->name('products');
+Route::get('/product/{product}', App\Http\Livewire\Shop\Product::class)->name('product');
+Route::get('/shopping-cart', App\Http\Livewire\Shop\Cart::class)->name('cart');
+Route::middleware('auth')->group(function () {
+    Route::get('/checkout', App\Http\Livewire\Shop\Checkout::class)->name('checkout');
 });
