@@ -32,23 +32,23 @@ class PaypalController extends Controller
 
         $params = [
             'amount' => $order->price,
-            'currency' => 'EUR',
+            'currency' => config('omnipay.defaults.currency'),
             'issuer' => config('app.name'),
-            'description' => 'test',
+            'description' => 'Order ' . $order->id,
             'returnUrl' => route('payments.paypal.success'),
             'cancelUrl' => route('checkout'),
         ];
 
         $response = $this->gateway->purchase($params)->send();
 
-        if ($response->isRedirect()) {
-            $order->payment_ref = $response->getTransactionReference();
-            $order->save();
-
-            return $response->getRedirectResponse();
-        } else {
+        if (!$response->isRedirect()) {
             abort(500, $response->getMessage());
         }
+
+        $order->payment_ref = $response->getTransactionReference();
+        $order->save();
+
+        return $response->getRedirectResponse();
     }
 
     /**
@@ -60,6 +60,9 @@ class PaypalController extends Controller
     public function success(Request $request)
     {
         $order = Order::where('payment_ref', $request->input('paymentId'))->firstOrFail();
+        if ($order->isPaid()) {
+            return redirect()->route('orders.paid', ['order' => $order]);
+        }
 
         $transaction = $this->gateway->completePurchase([
             'payer_id'             => $request->input('PayerID'),

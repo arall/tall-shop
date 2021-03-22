@@ -62,8 +62,6 @@ class Checkout extends Component
 
         $order = $this->createOrder();
 
-        Cart::empty();
-
         redirect()->route('orders.pay', ['order' => $order]);
     }
 

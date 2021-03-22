@@ -22,6 +22,7 @@ return [
     */
     'defaults' => [
         'testMode' => env('OMNIPAY_TESTMODE', false),
+        'currency' => env('CURRENCY'),
     ],
 
     /*
@@ -38,5 +39,4 @@ return [
             'secret' => env('OMNIPAY_PAYPAL_SECRET')
         ],
     ],
-
 ];

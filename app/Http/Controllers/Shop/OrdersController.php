@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Shop;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Helpers\Cart;
 
 class OrdersController extends Controller
 {
@@ -39,5 +40,9 @@ class OrdersController extends Controller
         if (!$order->isPaid()) {
             return redirect()->route('checkout');
         }
+
+        Cart::empty();
+
+        return 'Order paid!';
     }
 }
