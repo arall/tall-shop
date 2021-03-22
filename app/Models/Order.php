@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -21,6 +22,9 @@ class Order extends Model
         'city', 'region', 'phone'
     ];
 
+    const STATUS_NON_PAID = 0;
+
+    const STATUS_PAID = 1;
 
     /**
      * Create a new order.
@@ -62,6 +66,26 @@ class Order extends Model
         $order->save();
 
         return $order;
+    }
+
+    /**
+     * Set the order as paid.
+     */
+    public function setAsPaid()
+    {
+        $this->status = self::STATUS_PAID;
+        $this->payment_date = Carbon::now();
+        $this->save();
+    }
+
+    /**
+     * Check if the order has been paid.
+     *
+     * @return boolean
+     */
+    public function isPaid()
+    {
+        return $this->status == self::STATUS_PAID;
     }
 
     /**

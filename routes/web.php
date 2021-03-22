@@ -9,6 +9,7 @@ use App\Http\Livewire\Auth\Passwords\Reset;
 use App\Http\Livewire\Auth\Register;
 use App\Http\Livewire\Auth\Verify;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Shop\Payments\PaypalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,4 +70,13 @@ Route::get('/shopping-cart', App\Http\Livewire\Shop\Cart::class)->name('cart');
 Route::middleware('auth')->group(function () {
     Route::get('/checkout', App\Http\Livewire\Shop\Checkout::class)->name('checkout');
     Route::get('/orders/pay/{order}', [App\Http\Controllers\Shop\OrdersController::class, 'pay'])->name('orders.pay');
+    Route::get('/orders/paid/{order}', [App\Http\Controllers\Shop\OrdersController::class, 'paid'])->name('orders.paid');
+
+    /**
+     * Payment gateways
+     */
+    Route::prefix('payments/paypal')->name('payments.paypal.')->group(function () {
+        Route::get('/pay/{order}', [PaypalController::class, 'pay'])->name('pay');
+        Route::get('/success', [PaypalController::class, 'success'])->name('success');
+    });
 });
