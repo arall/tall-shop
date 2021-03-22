@@ -10,6 +10,16 @@ class Profile extends Model
     use HasFactory;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'lastname', 'country', 'address', 'zip',
+        'city', 'region', 'phone',
+    ];
+
+    /**
      * Indicates if the model should be timestamped.
      *
      * @var bool

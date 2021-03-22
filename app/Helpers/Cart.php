@@ -17,14 +17,14 @@ class Cart
     {
         $cart = self::get();
         $hash = md5($productId . '-' . json_encode($variantOptions));
-        $quantity = 1;
+        $units = 1;
         if (isset($cart[$hash])) {
-            $quantity = $cart[$hash]['quantity'] + 1;
+            $units = $cart[$hash]['units'] + 1;
         }
 
         $cart[$hash] = [
             'product_id' => $productId,
-            'quantity' => $quantity,
+            'units' => $units,
             'option_ids' => $variantOptions,
         ];
 
@@ -32,7 +32,7 @@ class Cart
     }
 
     /**
-     * Increase the quantity of a product.
+     * Increase the units of a product.
      *
      * @param string $hash
      * @return void
@@ -41,7 +41,7 @@ class Cart
     {
         $cart = self::get();
         if (isset($cart[$hash])) {
-            $cart[$hash]['quantity']++;
+            $cart[$hash]['units']++;
         }
 
         request()->session()->put('cart', $cart);
@@ -58,9 +58,9 @@ class Cart
     }
 
     /**
-     * Decrease the quantity of a product.
+     * Decrease the units of a product.
      *
-     * If the quantity is 0, the product will be removed.
+     * If the unit is 0, the product will be removed.
      *
      * @param string $hash
      * @return void
@@ -69,10 +69,10 @@ class Cart
     {
         $cart = self::get();
         if (isset($cart[$hash])) {
-            if ($cart[$hash]['quantity'] == 1) {
+            if ($cart[$hash]['units'] == 1) {
                 unset($cart[$hash]);
             } else {
-                $cart[$hash]['quantity']--;
+                $cart[$hash]['units']--;
             }
         }
 
@@ -89,7 +89,7 @@ class Cart
         $total = 0;
         foreach (self::get() as $item) {
             $product = Product::find($item['product_id']);
-            $total += $product->getTotalPrice($item['option_ids'])  * $item['quantity'];
+            $total += $product->getPrice($item['option_ids'])  * $item['units'];
         }
 
         return $total;

@@ -24,14 +24,12 @@ class ProductFactory extends Factory
     {
         return [
             'type_id' => ProductType::inRandomOrder()->first()->id,
-            'name' => $this->faker->sentence(4),
+            'name' => $this->faker->unique()->sentence(3),
             'description' => $this->faker->text,
-            'ref' => $this->faker->isbn13,
+            'sku' => $this->faker->unique()->isbn13,
             'price' => $this->faker->randomFloat(2, 10, 100),
-            'tax' => $this->faker->randomNumber(2),
-            'discount' => rand(1, 3) == 3 ? $this->faker->randomNumber(2) : null,
+            'price_compare' => rand(1, 3) == 3 ? $this->faker->randomNumber(2) : null,
             'weight' => $this->faker->randomNumber(2),
-            'quantity' => $this->faker->randomNumber(2),
         ];
     }
 

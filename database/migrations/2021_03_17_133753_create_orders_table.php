@@ -15,35 +15,33 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->integer('status')->default(false);
-            $table->string('ref');
+            $table->integer('status')->default(0);
 
             // User
             $table->foreignId('user_id');
 
-            // Shipping_
+            // Shipping
             $table->foreignId('shipping_carrier_id');
-            $table->decimal('shipping__price')->nullable();
+            $table->decimal('shipping_price')->nullable();
 
             // Payment
             $table->foreignId('payment_method_id');
             $table->decimal('payment_method_price')->nullable();
 
-            // Buyer details
+            // Shipping details
             $table->string('firstname')->nullable();
             $table->string('lastname')->nullable();
-            $table->integer('country_id')->nullable();
+            $table->string('country')->nullable();
             $table->text('address')->nullable();
-            $table->string('cp')->nullable();
+            $table->string('zip')->nullable();
             $table->string('city')->nullable();
-            $table->integer('region_id')->nullable();
+            $table->string('region')->nullable();
             $table->string('phone')->nullable();
-            $table->string('vat')->nullable();
+
+            // Incoive details (pending)
 
             // Details
-            $table->date('date');
-            $table->decimal('price');                     // Products without taxes + discounts
-            $table->decimal('total_price')->default(0);   // Shipping method (with taxes) + Payment method (with taxes) + Products with taxes
+            $table->decimal('price');
 
             // Payment data
             $table->string('payment_ref')->nullable();

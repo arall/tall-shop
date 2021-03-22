@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
+use Cviebrock\EloquentSluggable\Sluggable;
 
 class Product extends Model
 {
-    use HasFactory;
+    use Sluggable, HasFactory;
 
     /**
      * The "booted" method of the model.
@@ -17,17 +17,25 @@ class Product extends Model
      */
     protected static function booted()
     {
-        static::saving(function ($product) {
-            $product->slug = Str::slug($product->name);
-            $taxed_price = $product->sell_price + (($product->sell_price * $product->tax) / 100);
-            $product->total_price = round($taxed_price - (($taxed_price * $product->discount) / 100), 2);
-        });
-
         static::deleting(function ($product) {
             foreach ($product->images as $image) {
                 $image->delete();
             }
         });
+    }
+
+    /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
     }
 
     /**
@@ -57,9 +65,9 @@ class Product extends Model
      * @param  array $optionIds
      * @return decimal
      */
-    public function getTotalPrice(array $optionIds = [])
+    public function getPrice(array $optionIds = [])
     {
-        $price = $this->total_price;
+        $price = $this->price;
         foreach ($optionIds as $optionId) {
             $option = ProductVariantOption::find($optionId);
             if ($option) {

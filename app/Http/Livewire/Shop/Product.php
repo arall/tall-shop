@@ -20,7 +20,7 @@ class Product extends Component
             $this->optionIds[$variantId] = Arr::first($options)->id;
         }
 
-        $this->calculateTotalPrice();
+        $this->calculatePrice();
     }
 
     public function render()
@@ -35,7 +35,7 @@ class Product extends Component
      */
     public function changeOptions()
     {
-        $this->calculateTotalPrice();
+        $this->calculatePrice();
     }
 
     /**
@@ -52,8 +52,8 @@ class Product extends Component
     /**
      * Calculate the total price of the product.
      */
-    private function calculateTotalPrice()
+    private function calculatePrice()
     {
-        $this->price = $this->product->getTotalPrice($this->optionIds);
+        $this->price = $this->product->getPrice($this->optionIds);
     }
 }

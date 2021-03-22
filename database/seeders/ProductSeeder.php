@@ -44,9 +44,9 @@ class ProductSeeder extends Seeder
                 ProductVariantOption::create([
                     'product_id' => $product->id,
                     'product_variant_id' => $attribute->id,
-                    'name' => $faker->word,
+                    'name' => $faker->unique()->word,
                     'price' => $faker->numberBetween(10, 100),
-                    'ref' => $faker->isbn13,
+                    'sku' => $faker->unique()->isbn13,
                     'weight' => $faker->randomDigitNotNull,
                 ]);
             }

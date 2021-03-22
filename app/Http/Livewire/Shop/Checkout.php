@@ -8,6 +8,7 @@ use Livewire\Component;
 use PragmaRX\Countries\Package\Countries;
 use App\Models\User;
 use App\Models\Profile;
+use App\Models\Order;
 use App\Models\ShippingCarrier;
 
 class Checkout extends Component
@@ -15,9 +16,9 @@ class Checkout extends Component
     public User $user;
     public Profile $profile;
     public $shippingCarriers;
-    public $shippingCarrierId;
+    public $shippingCarrier;
     public $paymentMethods;
-    public $paymentMethodId;
+    public $paymentMethod;
     public $price;
 
     protected $rules = [
@@ -29,6 +30,8 @@ class Checkout extends Component
         'profile.address' => 'required|string',
         'profile.zip' => 'required',
         'profile.phone' => 'required',
+        'shippingCarrier' => 'required',
+        'paymentMethod' => 'required',
     ];
 
     public function mount()
@@ -50,24 +53,47 @@ class Checkout extends Component
             ->with('countries', Countries::all()->pluck('name.common', 'cca2')->toArray());
     }
 
-    public function saveAddress()
+    public function save()
     {
         $this->validate();
 
         $this->user->save();
         $this->profile->save();
+
+        $order = $this->createOrder();
+
+        redirect()->route('orders.pay', ['order' => $order]);
+    }
+
+    /**
+     * Create an order.
+     *
+     * @return Order
+     */
+    private function createOrder()
+    {
+        return Order::create(
+            $this->user,
+            ShippingCarrier::find($this->shippingCarrier),
+            PaymentMethod::find($this->paymentMethod),
+            Cart::get()
+        );
     }
 
     public function calculateTotalPrice()
     {
         $this->price = Cart::getTotalPrice();
-        $shippingCarrier = ShippingCarrier::find($this->shippingCarrierId);
-        if ($shippingCarrier) {
-            $this->price += $shippingCarrier->total_price;
+        if ($this->shippingCarrier) {
+            $shippingCarrier = ShippingCarrier::find($this->shippingCarrier);
+            if ($shippingCarrier) {
+                $this->price += $shippingCarrier->price;
+            }
         }
-        $paymentMethod = PaymentMethod::find($this->paymentMethodId);
-        if ($paymentMethod) {
-            $this->price += $paymentMethod->total_price;
+        if ($this->paymentMethod) {
+            $paymentMethod = PaymentMethod::find($this->paymentMethod);
+            if ($paymentMethod) {
+                $this->price += $paymentMethod->price;
+            }
         }
     }
 }

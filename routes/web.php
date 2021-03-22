@@ -68,4 +68,5 @@ Route::get('/product/{product}', App\Http\Livewire\Shop\Product::class)->name('p
 Route::get('/shopping-cart', App\Http\Livewire\Shop\Cart::class)->name('cart');
 Route::middleware('auth')->group(function () {
     Route::get('/checkout', App\Http\Livewire\Shop\Checkout::class)->name('checkout');
+    Route::get('/orders/pay/{order}', [App\Http\Controllers\Shop\OrdersController::class, 'pay'])->name('orders.pay');
 });

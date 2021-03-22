@@ -21,13 +21,10 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->text('description')->nullable();
-            $table->string('ref')->nullable()->unique();
+            $table->string('sku')->nullable()->unique();
             $table->decimal('price')->default(0)->nullable();         // Price without tax & without discount
-            $table->decimal('tax')->default(0)->nullable();           // Tax %
-            $table->decimal('discount')->nullable();                  // Discount %
-            $table->decimal('total_price')->default(0)->nullable();   // Price with tax & with discount
+            $table->decimal('price_compare')->nullable();             // Discount %
             $table->decimal('weight')->nullable();
-            $table->integer('quantity')->default(0);
             $table->timestamps();
         });
     }

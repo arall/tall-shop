@@ -22,10 +22,9 @@ class ShippingCarrierFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->word,
+            'name' => $this->faker->unique()->word,
             'price' => $this->faker->randomFloat(2, 5, 10),
             'price_kg' => $this->faker->randomFloat(2, 1, 5),
-            'tax' => $this->faker->randomNumber(2),
             'eta' => rand(1, 0) == 0 ? '24' : '72',
         ];
     }

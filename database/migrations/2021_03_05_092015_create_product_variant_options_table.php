@@ -18,8 +18,8 @@ class CreateProductVariantOptionsTable extends Migration
             $table->foreignId('product_id');
             $table->foreignId('product_variant_id');
             $table->string('name');
-            $table->decimal('price', 20, 2);    // Price increase in the product price
-            $table->string('ref')->nullable();
+            $table->decimal('price', 20, 2);        // Price increase in the product price
+            $table->string('sku')->nullable();
             $table->integer('weight')->nullable();
             $table->unique(array('product_id', 'product_variant_id', 'name'), 'p_a_name');
         });
