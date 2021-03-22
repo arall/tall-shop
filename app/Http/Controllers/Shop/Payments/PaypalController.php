@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Shop\Payments;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 class PaypalController extends Controller
 {
@@ -15,7 +16,7 @@ class PaypalController extends Controller
 
     public function __construct()
     {
-        $this->gateway = \Omnipay::gateway('PayPal_Rest');
+        $this->gateway = App::make('omnipay')->gateway('PayPal_Rest');
     }
 
     /**
