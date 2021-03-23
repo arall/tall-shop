@@ -135,12 +135,12 @@
             </div>
 
             <!-- Payment method -->
-            <div id="paymentMethod" x-data="{ active: {{ $paymentMethodId ?: 0 }}, stripe: false }">
+            <div id="paymentMethod">
                 <h3 class="text-lg leading-6 font-medium text-gray-900">
                     {{ __('Payment method') }}
                 </h3>
                 <div class="mt-6">
-                    <ul class="relative rounded-md -space-y-px">
+                    <ul class="relative rounded-md -space-y-px" x-data="{ active: {{ $paymentMethodId ?: 0 }}}">
                         @foreach ($paymentMethods as $paymentMethod)
                             <li>
                                 <div
@@ -154,10 +154,7 @@
                                     "
                                 >
                                     <label
-                                        @click="
-                                            active = {{ $paymentMethod->id }};
-                                            stripe = {{ $paymentMethod->type == 'stripe' ? 'true' : 'false' }};
-                                        "
+                                        @click="active = {{ $paymentMethod->id }}"
                                         class="flex items-center text-sm cursor-pointer"
                                         wire:click="calculateTotalPrice"
                                     >
@@ -185,68 +182,12 @@
                     </ul>
                     @error('paymentMethodId') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
-
-                <!-- Stripe form -->
-                @if($hasStripe)
-                    <div wire:ignore>
-                        <!-- Stripe Credit Card form -->
-                        <script src="https://js.stripe.com/v3/"></script>
-                        <script>
-                            var stripe = Stripe('{{ getenv('OMNIPAY_STRIPE_PUBLIC') }}');
-                            var elements = stripe.elements();
-                        </script>
-
-                        <div x-show="stripe">
-                            <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                                <div class="sm:col-span-6">
-                                    <label for="carholder" class="block text-sm font-medium text-gray-700">
-                                        {{ __('Card Holder Name') }}
-                                    </label>
-                                    <div class="mt-1">
-                                        <x-input.text id="carholder"/>
-                                    </div>
-                                </div>
-                                <div class="sm:col-span-6">
-                                    <label for="card-element" class="block text-sm font-medium text-gray-700">
-                                        {{ __('Credit Card details') }}
-                                    </label>
-                                </div>
-                            </div>
-                            <div id="card-element"></div>
-                            <div id="card-errors" class="mt-2 text-sm text-red-600" role="alert"></div>
-                        </div>
-
-                        <script>
-                            var card = elements.create('card');
-                            card.mount('#card-element');
-
-                            function saveStripe(){
-                                stripe.createPaymentMethod({
-                                    type: 'card',
-                                    card: card,
-                                    billing_details: {
-                                        name: document.getElementById('carholder'),
-                                    },
-                                }).then(function(result) {
-                                    var errorElement = document.getElementById('card-errors');
-                                    errorElement.textContent = '';
-                                    if (result.error) {
-                                        errorElement.textContent = result.error.message;
-                                    } else {
-                                        @this.set('stripePaymentMethod', result.paymentMethod);
-                                        @this.save();
-                                    }
-                                });
-                            }
-                        </script>
-                    </div>
-                @endif
             </div>
 
             <!-- Continue -->
             <div>
                 <div class="flex justify-end">
-                    <x-button.primary onClick="save()" class="inline-flex items-center">
+                    <x-button.primary wire:click="save" class="inline-flex items-center">
                         <svg wire:loading wire:target="save" class="animate-spin w-4 h-4 mr-3 inline-block" ill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -276,13 +217,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    function save(){
-        if(document.getElementById('paymentMethod').__x.$data.stripe){
-            return saveStripe();
-        }
-
-        return @this.save();
-    }
-</script>

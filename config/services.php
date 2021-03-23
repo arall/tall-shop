@@ -30,4 +30,14 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'paypal' => [
+        'client' => env('PAYPAL_CLIENT'),
+        'secret' => env('PAYPAL_SECRET'),
+    ],
+
+    'stripe' => [
+        'public' => env('STRIPE_PUBLIC'),
+        'secret' => env('STRIPE_SECRET'),
+    ],
+
 ];

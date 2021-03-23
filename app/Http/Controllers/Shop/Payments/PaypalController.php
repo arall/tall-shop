@@ -2,21 +2,29 @@
 
 namespace App\Http\Controllers\Shop\Payments;
 
+use App\Helpers\Cart;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
+use PayPalCheckoutSdk\Core\PayPalHttpClient;
+use PayPalCheckoutSdk\Core\SandboxEnvironment;
+use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
+use PayPalCheckoutSdk\Orders\OrdersCaptureRequest;
 
 class PaypalController extends Controller
 {
     /**
-     * Omnipay gateway instance.
+     * Paypal client instance.
      */
-    private $gateway;
+    private $client;
 
     public function __construct()
     {
-        $this->gateway = App::make('omnipay')->gateway('PayPal_Rest');
+        $environment = new SandboxEnvironment(
+            config('services.paypal.client'),
+            config('services.paypal.secret')
+        );
+        $this->client = new PayPalHttpClient($environment);
     }
 
     /**
@@ -27,29 +35,42 @@ class PaypalController extends Controller
      */
     public function pay(Order $order)
     {
-        if ($order->user->id !== auth()->user()->id) {
-            abort(404);
-        }
+        $request = new OrdersCreateRequest();
+        $request->prefer('return=representation');
 
-        $params = [
-            'amount' => $order->price,
-            'currency' => config('omnipay.defaults.currency'),
-            'issuer' => config('app.name'),
-            'description' => 'Order ' . $order->id,
-            'returnUrl' => route('payments.paypal.success'),
-            'cancelUrl' => route('checkout'),
+        $request->body = [
+            'intent' => 'CAPTURE',
+            'purchase_units' => [[
+                'reference_id' => $order->id,
+                'amount' => [
+                    'currency_code' => getenv('CURRENCY'),
+                    'value' => $order->price,
+                ],
+            ]],
+            'application_context' => [
+                'return_url' => route('payments.paypal.success'),
+                'cancel_url' => route('checkout'),
+            ]
         ];
 
-        $response = $this->gateway->purchase($params)->send();
-
-        if (!$response->isRedirect()) {
-            abort(500, $response->getMessage());
+        try {
+            $response = $this->client->execute($request);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            abort(500, $e->getMessage());
         }
 
-        $order->payment_ref = $response->getTransactionReference();
+        $order->payment_ref = $response->result->id;
         $order->save();
 
-        return $response->getRedirectResponse();
+        $link = array_values(array_filter(
+            $response->result->links,
+            function ($e) {
+                return $e->rel == "approve";
+            }
+        ))[0]->href;
+
+        return redirect()->to($link);
     }
 
     /**
@@ -60,21 +81,25 @@ class PaypalController extends Controller
      */
     public function success(Request $request)
     {
-        $order = Order::where('payment_ref', $request->input('paymentId'))->firstOrFail();
+        $order = Order::where('payment_ref', $request->input('token'))->firstOrFail();
         if ($order->isPaid()) {
             return redirect()->route('orders.paid', ['order' => $order]);
         }
 
-        $transaction = $this->gateway->completePurchase([
-            'payer_id'             => $request->input('PayerID'),
-            'transactionReference' => $request->input('paymentId'),
-        ]);
-        $response = $transaction->send();
-        if (!$response->isSuccessful()) {
-            abort(401, $response->getMessage());
+        $request = new OrdersCaptureRequest($request->input('token'));
+        $request->prefer('return=representation');
+        try {
+            $response = $this->client->execute($request);
+        } catch (\Exception $e) {
+            abort(500, $e->getMessage());
+        }
+
+        if ($response->result->status !== 'COMPLETED') {
+            abort(401);
         }
 
         $order->setAsPaid();
+        Cart::empty();
 
         return redirect()->route('orders.paid', ['order' => $order]);
     }

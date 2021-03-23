@@ -81,7 +81,7 @@ class ProductImage extends Model
      */
     public function getUrl(string $size = 'thumb')
     {
-        return '/storage/' . $this->getRelativePath($size);
+        return asset('/storage/' . $this->getRelativePath($size));
     }
 
     /**

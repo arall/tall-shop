@@ -56,7 +56,7 @@ class Product extends Model
      */
     public function getCoverUrl(string $size)
     {
-        return $this->cover ? $this->cover->getUrl($size) : '/storage/images/defaults/product.png';
+        return $this->cover ? $this->cover->getUrl($size) : asset('/storage/images/defaults/product.png');
     }
 
     /**
