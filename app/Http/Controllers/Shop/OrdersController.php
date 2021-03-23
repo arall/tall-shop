@@ -20,8 +20,10 @@ class OrdersController extends Controller
             abort(404);
         }
 
-        if ($order->paymentMethod->name == 'Paypal') {
+        if ($order->paymentMethod->type == 'paypal') {
             return redirect()->route('payments.paypal.pay', ['order' => $order]);
+        } elseif ($order->paymentMethod->type == 'stripe') {
+            return redirect()->route('payments.stripe.pay', ['order' => $order]);
         }
     }
 

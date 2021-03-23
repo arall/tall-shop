@@ -43,9 +43,6 @@
                     >
                         {{ __('Log out') }}
                     </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
                 @else
                     <a href="{{ route('login') }}" class="text-base font-medium text-gray-500 hover:text-gray-900">
                             {{ __('Sing in') }}
@@ -111,9 +108,6 @@
                         >
                             {{ __('Log out') }}
                         </a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            @csrf
-                        </form>
                     @else
                         <a href="{{ route('register') }}"
                             class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700">
@@ -131,3 +125,9 @@
         </div>
     </div>
 </div>
+
+@auth
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
+@endauth

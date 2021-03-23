@@ -10,6 +10,7 @@ use App\Http\Livewire\Auth\Register;
 use App\Http\Livewire\Auth\Verify;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Shop\Payments\PaypalController;
+use App\Http\Controllers\Shop\Payments\StripeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,5 +79,9 @@ Route::middleware('auth')->group(function () {
     Route::prefix('payments/paypal')->name('payments.paypal.')->group(function () {
         Route::get('/pay/{order}', [PaypalController::class, 'pay'])->name('pay');
         Route::get('/success', [PaypalController::class, 'success'])->name('success');
+    });
+    Route::prefix('payments/stripe')->name('payments.stripe.')->group(function () {
+        Route::get('/pay/{order}', [StripeController::class, 'pay'])->name('pay');
+        Route::get('/success', [StripeController::class, 'success'])->name('success');
     });
 });

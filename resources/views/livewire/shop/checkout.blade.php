@@ -101,25 +101,23 @@
                     {{ __('Shipping method') }}
                 </h3>
                 <div class="mt-6">
-                    <ul class="relative bg-white rounded-md -space-y-px" x-ref="radiogroup">
+                    <ul class="relative rounded-md -space-y-px" x-ref="radiogroup" x-data="{ active: {{ $shippingCarrierId ?: 0 }} }">
                         @foreach ($shippingCarriers as $shippingCarrier)
                             <li>
-                                <div :class="{ 'border-gray-200': !(active === 0), 'bg-indigo-50 border-indigo-200 z-10': active === 0 }"
+                                <div :class="{ 'border-gray-200': active !== {{ $shippingCarrier->id }}, 'bg-indigo-50 border-indigo-200 z-10': active === {{ $shippingCarrier->id }} }"
                                     class="relative border @if($loop->first) {{ 'rounded-tl-md rounded-tr-md' }} @elseif($loop->last) {{ 'rounded-bl-md rounded-br-md' }} @endif
                                     p-4 flex flex-col md:pl-4 md:pr-6 md:grid md:grid-cols-3 border-gray-200">
-                                    <label class="flex items-center text-sm cursor-pointer" wire:click="calculateTotalPrice" >
-                                        <input wire:model="shippingCarrier" name="shippingCarrier" type="radio" value="{{ $shippingCarrier->id }}"
+                                    <label @click="active = {{ $shippingCarrier->id }}" class="flex items-center text-sm cursor-pointer" wire:click="calculateTotalPrice" >
+                                        <input wire:model="shippingCarrierId" name="shippingCarrierId" type="radio" value="{{ $shippingCarrier->id }}"
                                             class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 cursor-pointer border-gray-300"
                                             aria-describedby="plan-option-pricing-0 plan-option-limit-0">
-                                        <span class="ml-3 font-medium text-gray-900">
+                                        <span class="ml-3 font-medium">
                                             {{ $shippingCarrier->name }}
                                         </span>
                                     </label>
                                     <p id="plan-option-pricing-0"
                                         class="ml-6 pl-1 text-sm md:ml-0 md:pl-0 md:text-center">
-                                        <span
-                                            :class="{ 'text-indigo-900': active === 0, 'text-gray-900': !(active === 0) }"
-                                            class="font-medium text-gray-900">
+                                        <span :class="{ 'text-indigo-900': active === 0, 'text-gray-900': !(active === 0) }">
                                             @price($shippingCarrier->price)
                                         </span>
                                     </p>
@@ -132,36 +130,51 @@
                             </li>
                         @endforeach
                     </ul>
-                    @error('shippingCarrier') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
+                    @error('shippingCarrierId') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
             </div>
 
             <!-- Payment method -->
-            <div>
+            <div id="paymentMethod" x-data="{ active: {{ $paymentMethodId ?: 0 }}, stripe: false }">
                 <h3 class="text-lg leading-6 font-medium text-gray-900">
                     {{ __('Payment method') }}
                 </h3>
                 <div class="mt-6">
-                    <ul class="relative bg-white rounded-md -space-y-px" x-ref="radiogroup">
+                    <ul class="relative rounded-md -space-y-px">
                         @foreach ($paymentMethods as $paymentMethod)
                             <li>
-                                <div :class="{ 'border-gray-200': !(active === 0), 'bg-indigo-50 border-indigo-200 z-10': active === 0 }"
-                                    class="relative border @if($loop->first) {{ 'rounded-tl-md rounded-tr-md' }} @elseif($loop->last) {{ 'rounded-bl-md rounded-br-md' }} @endif
-                                    p-4 flex flex-col md:pl-4 md:pr-6 md:grid md:grid-cols-3 border-gray-200">
-                                    <label class="flex items-center text-sm cursor-pointer" wire:click="calculateTotalPrice" >
-                                        <input wire:model="paymentMethod" name="paymentMethod" type="radio" value="{{ $paymentMethod->id }}"
+                                <div
+                                    :class="{
+                                        'border-gray-200': active !== {{ $paymentMethod->id }},
+                                        'bg-indigo-50 border-indigo-200 z-10': active === {{ $paymentMethod->id }}
+                                    }"
+                                    class="
+                                        @if($loop->first) {{ 'rounded-tl-md rounded-tr-md' }} @elseif($loop->last) {{ 'rounded-bl-md rounded-br-md' }} @endif
+                                        relative border p-4 flex flex-col md:pl-4 md:pr-6 md:grid md:grid-cols-3 border-gray-20
+                                    "
+                                >
+                                    <label
+                                        @click="
+                                            active = {{ $paymentMethod->id }};
+                                            stripe = {{ $paymentMethod->type == 'stripe' ? 'true' : 'false' }};
+                                        "
+                                        class="flex items-center text-sm cursor-pointer"
+                                        wire:click="calculateTotalPrice"
+                                    >
+                                        <input
+                                            wire:model="paymentMethodId" name="paymentMethodId" type="radio" value="{{ $paymentMethod->id }}"
                                             class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 cursor-pointer border-gray-300"
-                                            aria-describedby="plan-option-pricing-0 plan-option-limit-0">
-                                        <span class="ml-3 font-medium text-gray-900">
+                                            aria-describedby="plan-option-pricing-0 plan-option-limit-0"
+                                        >
+                                        <span class="ml-3 font-medium">
                                             {{ $paymentMethod->name }}
                                         </span>
                                     </label>
                                     @if($paymentMethod->price > 0)
-                                        <p id="plan-option-pricing-0"
-                                            class="ml-6 pl-1 text-sm md:ml-0 md:pl-0 md:text-center">
+                                        <p id="plan-option-pricing-0" class="ml-6 pl-1 text-sm md:ml-0 md:pl-0 md:text-center">
                                             <span
                                                 :class="{ 'text-indigo-900': active === 0, 'text-gray-900': !(active === 0) }"
-                                                class="font-medium text-gray-900">
+                                            >
                                                 @price($paymentMethod->price)
                                             </span>
                                         </p>
@@ -170,14 +183,70 @@
                             </li>
                         @endforeach
                     </ul>
-                    @error('paymentMethod') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
+                    @error('paymentMethodId') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
+
+                <!-- Stripe form -->
+                @if($hasStripe)
+                    <div wire:ignore>
+                        <!-- Stripe Credit Card form -->
+                        <script src="https://js.stripe.com/v3/"></script>
+                        <script>
+                            var stripe = Stripe('{{ getenv('OMNIPAY_STRIPE_PUBLIC') }}');
+                            var elements = stripe.elements();
+                        </script>
+
+                        <div x-show="stripe">
+                            <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                                <div class="sm:col-span-6">
+                                    <label for="carholder" class="block text-sm font-medium text-gray-700">
+                                        {{ __('Card Holder Name') }}
+                                    </label>
+                                    <div class="mt-1">
+                                        <x-input.text id="carholder"/>
+                                    </div>
+                                </div>
+                                <div class="sm:col-span-6">
+                                    <label for="card-element" class="block text-sm font-medium text-gray-700">
+                                        {{ __('Credit Card details') }}
+                                    </label>
+                                </div>
+                            </div>
+                            <div id="card-element"></div>
+                            <div id="card-errors" class="mt-2 text-sm text-red-600" role="alert"></div>
+                        </div>
+
+                        <script>
+                            var card = elements.create('card');
+                            card.mount('#card-element');
+
+                            function saveStripe(){
+                                stripe.createPaymentMethod({
+                                    type: 'card',
+                                    card: card,
+                                    billing_details: {
+                                        name: document.getElementById('carholder'),
+                                    },
+                                }).then(function(result) {
+                                    var errorElement = document.getElementById('card-errors');
+                                    errorElement.textContent = '';
+                                    if (result.error) {
+                                        errorElement.textContent = result.error.message;
+                                    } else {
+                                        @this.set('stripePaymentMethod', result.paymentMethod);
+                                        @this.save();
+                                    }
+                                });
+                            }
+                        </script>
+                    </div>
+                @endif
             </div>
 
             <!-- Continue -->
             <div>
                 <div class="flex justify-end">
-                    <x-button.primary wire:click="save" class="inline-flex items-center">
+                    <x-button.primary onClick="save()" class="inline-flex items-center">
                         <svg wire:loading wire:target="save" class="animate-spin w-4 h-4 mr-3 inline-block" ill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -207,3 +276,13 @@
         </div>
     </div>
 </div>
+
+<script>
+    function save(){
+        if(document.getElementById('paymentMethod').__x.$data.stripe){
+            return saveStripe();
+        }
+
+        return @this.save();
+    }
+</script>

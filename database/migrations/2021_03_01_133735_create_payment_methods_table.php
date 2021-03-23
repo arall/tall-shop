@@ -17,6 +17,7 @@ class CreatePaymentMethodsTable extends Migration
             $table->id();
             $table->boolean('status')->default(false);
             $table->string('name');
+            $table->string('type');
             $table->decimal('price')->default(0)->nullable();
             $table->decimal('price_percent')->default(0)->nullable();
             $table->timestamps();

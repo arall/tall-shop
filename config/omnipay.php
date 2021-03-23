@@ -38,5 +38,8 @@ return [
             'clientId' => env('OMNIPAY_PAYPAL_CLIENTID'),
             'secret' => env('OMNIPAY_PAYPAL_SECRET')
         ],
+        'Stripe' => [
+            'apiKey' => env('OMNIPAY_STRIPE_SECRET'),
+        ],
     ],
 ];

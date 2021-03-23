@@ -18,8 +18,10 @@
         "intervention/image": "^2.5",
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
+        "league/omnipay": "^3.1",
         "livewire/livewire": "^2.4",
         "omnipay/paypal": "^3.0",
+        "omnipay/stripe": "^3.1",
         "pragmarx/countries": "^0.7.2"
     },
     "require-dev": {

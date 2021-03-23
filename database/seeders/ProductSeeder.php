@@ -45,7 +45,7 @@ class ProductSeeder extends Seeder
                     'product_id' => $product->id,
                     'product_variant_id' => $attribute->id,
                     'name' => $faker->unique()->word,
-                    'price' => $faker->numberBetween(10, 100),
+                    'price' => $i == 0 ? 0 : $faker->numberBetween(10, 100),
                     'sku' => $faker->unique()->isbn13,
                     'weight' => $faker->randomDigitNotNull,
                 ]);
