@@ -1,6 +1,6 @@
 <div class="container mx-auto px-6">
-    <div class="flex shadow-md my-10 bg-white">
-        <div class="w-3/4 px-10 py-10 space-y-6">
+    <div class="lg:flex shadow-md my-10 bg-white">
+        <div class="lg:w-3/4 px-10 py-10 space-y-6">
             <!-- Shipping info -->
             <div>
                 <h3 class="text-lg leading-6 font-medium text-gray-900">
@@ -183,6 +183,22 @@
                     @error('paymentMethodId') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
             </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="lg:w-1/4 px-8 py-10">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                {{ __('Order Summary') }}
+            </h3>
+
+            <div class="border-t mt-5 flex font-semibold justify-between py-6 text-sm uppercase">
+                <span>
+                    {{ __('Total Cost') }}
+                </span>
+                <span>
+                    @price($price)
+                </span>
+            </div>
 
             <!-- Continue -->
             <div>
@@ -197,22 +213,6 @@
                         </span>
                     </x-button>
                 </div>
-            </div>
-        </div>
-
-        <!-- Summary -->
-        <div class="w-1/4 px-8 py-10">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">
-                {{ __('Order Summary') }}
-            </h3>
-
-            <div class="border-t mt-5 flex font-semibold justify-between py-6 text-sm uppercase">
-                <span>
-                    {{ __('Total Cost') }}
-                </span>
-                <span>
-                    @price($price)
-                </span>
             </div>
         </div>
     </div>

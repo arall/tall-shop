@@ -38,11 +38,11 @@ class Products extends Component
     /**
      * @var string[]
      */
-    public $queryString = ['sortField', 'sortDirection'];
+    public $queryString = ['search', 'sortField', 'sortDirection'];
 
     public function render()
     {
-        $query = Product::query();
+        $query = Product::search($this->search);
 
         $products = $query->orderBy($this->sortField, $this->sortDirection)->paginate($this->limit);
 

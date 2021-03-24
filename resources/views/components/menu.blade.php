@@ -9,7 +9,14 @@
                     alt="">
             </a>
         </div>
-        <div class="-mr-2 -my-2 md:hidden">
+
+        <!-- Mobile -->
+        <div class="-mr-2 -my-2 md:hidden flex">
+
+            <div class="mr-5">
+                @livewire('shop.cart-icon')
+            </div>
+
             <button type="button"
                 @click="open = true"
                 @mousedown="if (open) $event.preventDefault()"
@@ -23,6 +30,8 @@
                 </svg>
             </button>
         </div>
+
+        <!-- Non-mobile -->
         <div class="hidden md:flex-1 md:flex md:items-center md:justify-between">
             <nav class="flex space-x-10">
                 <a href="{{ route('products') }}" class="text-base font-medium text-gray-500 hover:text-gray-900">
@@ -67,7 +76,7 @@
         x-description="Mobile menu, show/hide based on mobile menu state."
         @click.away="open = false"
         style="display: none;"
-        class="absolute top-0 inset-x-0 p-2 transition transform origin-top-right md:hidden">
+        class="absolute top-0 inset-x-0 p-2  z-10 transition transform origin-top-right md:hidden">
         <div class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-white divide-y-2 divide-gray-50">
             <div class="pt-5 pb-6 px-5">
                 <div class="flex items-center justify-between">
@@ -94,7 +103,6 @@
                         <a href="{{ route('products') }}" class="-m-3 p-3 flex items-center rounded-lg hover:bg-gray-50">
                             {{ __('Products') }}
                         </a>
-                        @livewire('shop.cart-icon')
                     </nav>
                 </div>
             </div>

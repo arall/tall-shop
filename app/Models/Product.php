@@ -96,6 +96,24 @@ class Product extends Model
     }
 
     /**
+     * Search products by string.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  string $search
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSearch($query, string $search = '')
+    {
+        if (!$search) {
+            return $query;
+        }
+
+        return $query->where('name', 'like', '%' . $search . '%')
+            ->orWhere('description', 'like', '%' . $search . '%')
+            ->orWhere('sku', 'like', '%' . $search . '%');
+    }
+
+    /**
      * Get the product cover image.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
