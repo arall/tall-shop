@@ -44,6 +44,16 @@ class User extends Authenticatable
     ];
 
     /**
+     * Get Gravatar URL.
+     *
+     * @return string
+     */
+    public function getGravatarAttribute()
+    {
+        return 'http://www.gravatar.com/avatar/' . md5(strtolower($this->email));
+    }
+
+    /**
      * Get the profile.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

@@ -8,23 +8,19 @@
                 </h3>
                 <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                     <div class="sm:col-span-3">
-                        <label for="firstname" class="block text-sm font-medium text-gray-700">
-                            {{ __('First name') }}
-                        </label>
-                        <div class="mt-1">
-                            <x-input.text id="firstname" wire:model="user.name" />
-                            @error('user.name') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
-                        </div>
+                        <x-label for="firstname">
+                            {{ __('First Name') }}
+                        </x-label>
+                        <x-input.text id="firstname" wire:model="user.name" />
+                        <x-error for="user.name" />
                     </div>
 
                     <div class="sm:col-span-3">
-                        <label for="lastname" class="block text-sm font-medium text-gray-700">
-                            {{ __('Last name') }}
-                        </label>
-                        <div class="mt-1">
-                            <x-input.text id="lastname" wire:model="profile.lastname" />
-                            @error('profile.lastname') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
-                        </div>
+                        <x-label for="lastname">
+                            {{ __('Last Name') }}
+                        </x-label>
+                        <x-input.text id="lastname" wire:model="profile.lastname" />
+                        <x-error for="profile.lastname" />
                     </div>
 
                     <div class="sm:col-span-3">

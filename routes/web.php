@@ -85,3 +85,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/success', [StripeController::class, 'success'])->name('success');
     });
 });
+
+/**
+ * Account
+ */
+Route::middleware('auth')->prefix('account/')->group(function () {
+    Route::get('/', App\Http\Livewire\Account\Account::class)->name('account');
+});
