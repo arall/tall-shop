@@ -35,6 +35,8 @@ class Checkout extends Component
     {
         $user = auth()->user();
 
+        $this->address = new UserAddress;
+
         if ($user->addresses()->count()) {
             $this->address = $user->addresses()->first();
         }

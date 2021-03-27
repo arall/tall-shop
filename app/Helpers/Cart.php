@@ -28,7 +28,7 @@ class Cart
             'option_ids' => $variantOptions,
         ];
 
-        request()->session()->put('cart', $cart);
+        session()->put('cart', $cart);
     }
 
     /**
@@ -44,7 +44,7 @@ class Cart
             $cart[$hash]['units']++;
         }
 
-        request()->session()->put('cart', $cart);
+        session()->put('cart', $cart);
     }
 
     /**
@@ -76,7 +76,7 @@ class Cart
             }
         }
 
-        request()->session()->put('cart', $cart);
+        session()->put('cart', $cart);
     }
 
     /**
@@ -108,7 +108,7 @@ class Cart
             unset($cart[$hash]);
         }
 
-        request()->session()->put('cart', $cart);
+        session()->put('cart', $cart);
     }
 
     /**
@@ -118,7 +118,7 @@ class Cart
      */
     public static function empty()
     {
-        request()->session()->put('cart', []);
+        session()->put('cart', []);
     }
 
     /**
@@ -128,6 +128,6 @@ class Cart
      */
     public static function get()
     {
-        return request()->session()->get('cart') ?: [];
+        return session()->get('cart') ?: [];
     }
 }

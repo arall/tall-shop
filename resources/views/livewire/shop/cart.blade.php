@@ -92,7 +92,7 @@
                 @endforeach
                 <div class="pt-5">
                     <div class="float-left">
-                        <x-button>
+                        <x-button wire:click="empty">
                             {{ __('Empty cart') }}
                         </x-button>
                     </div>
