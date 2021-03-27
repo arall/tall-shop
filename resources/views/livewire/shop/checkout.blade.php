@@ -23,7 +23,7 @@
                         </x-input.group>
                     @endif
 
-                    @include('livewire.account.partials.address-form')
+                    <x-account.forms.address :countries="$countries"/>
                 </div>
             </div>
 

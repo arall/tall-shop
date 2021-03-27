@@ -128,7 +128,7 @@
                                     <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                                         <input type="hidden" wire:model="address.id">
 
-                                        @include('livewire.account.partials.address-form')
+                                        <x-account.forms.address :countries="$countries"/>
                                     </div>
                                 </x-slot>
                                 <x-slot name="footer">
