@@ -4,7 +4,7 @@
 
             <!-- Image gallery -->
             <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0"
-                x-data="{ current: {{ $product->cover->id }} }">
+                x-data="{ current: {{ $product->cover ? $product->cover->id : 0 }} }">
                 <div class="lg:h-auto h-64 object-cover object-center">
                     @foreach ($product->images as $image)
                         <img

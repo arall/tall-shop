@@ -1,6 +1,6 @@
 <aside class="py-6 px-2 sm:px-6 lg:py-0 lg:px-0 lg:col-span-3">
     <nav class="space-y-1">
-        <a href="#"
+        <a href="{{ route('account') }}"
             class="text-gray-900 hover:text-gray-900 hover:bg-gray-50 group rounded-md px-3 py-2 flex items-center text-sm font-medium">
             <svg class="text-gray-400 group-hover:text-gray-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6"
                 x-description="Heroicon name: outline/cog" fill="none"
@@ -15,7 +15,7 @@
                 {{ __('Account') }}
             </span>
         </a>
-        <a href="#"
+        <a href="{{ route('addresses') }}"
             class="text-gray-900 hover:text-gray-900 hover:bg-gray-50 group rounded-md px-3 py-2 flex items-center text-sm font-medium">
             <svg class="text-gray-400 group-hover:text-gray-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6"
                 fill="none" viewBox="0 0 24 24" stroke="currentColor">

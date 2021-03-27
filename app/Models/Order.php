@@ -31,7 +31,7 @@ class Order extends Model
      *
      * @return Order
      */
-    static function create(User $user, ShippingCarrier $shippingCarrier, PaymentMethod $paymentMethod, array $cart)
+    static function create(User $user, UserAddress $address, ShippingCarrier $shippingCarrier, PaymentMethod $paymentMethod, array $cart)
     {
         $order = new Order;
         $order->user()->associate($user);
@@ -40,7 +40,7 @@ class Order extends Model
         $order->shipping_price = $shippingCarrier->price; // @todo calculate based on products weight
         $order->payment_method_price = $paymentMethod->price; // @todo calculate based on products price
         $order->firstname = $user->name;
-        $order->fill($user->profile->toArray());
+        $order->fill($address->toArray());
         $order->price = 0;
         $order->save();
 

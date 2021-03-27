@@ -6,71 +6,71 @@ use App\Helpers\Cart;
 use App\Models\PaymentMethod;
 use Livewire\Component;
 use PragmaRX\Countries\Package\Countries;
-use App\Models\User;
-use App\Models\Profile;
 use App\Models\Order;
 use App\Models\ShippingCarrier;
+use App\Models\UserAddress;
 
 class Checkout extends Component
 {
-    public User $user;
-    public Profile $profile;
-    public $shippingCarriers;
+    public $addressId;
+    public UserAddress $address;
     public $shippingCarrierId;
-    public $paymentMethods;
     public $paymentMethodId;
     public $price;
-    public $hasStripe = false;
-    public $stripePaymentMethod;
 
     protected $rules = [
-        'user.name' => 'required|string',
-        'profile.lastname' => 'required|string',
-        'profile.country' => 'required|string',
-        'profile.region' => 'required|string',
-        'profile.city' => 'required|string',
-        'profile.address' => 'required|string',
-        'profile.zip' => 'required',
-        'profile.phone' => 'required',
+        'address.firstname' => 'required|string',
+        'address.lastname' => 'required|string',
+        'address.country' => 'required|string',
+        'address.region' => 'required|string',
+        'address.city' => 'required|string',
+        'address.address' => 'required|string',
+        'address.zip' => 'required',
+        'address.phone' => 'required',
         'shippingCarrierId' => 'required|exists:shipping_carriers,id',
         'paymentMethodId' => 'required|exists:payment_methods,id',
     ];
 
     public function mount()
     {
-        $this->user = auth()->user();
-        $profile = $this->user->profile;
-        if (!$profile) {
-            $profile = $this->user->profile()->create();
-        }
-        $this->profile = $profile;
-        $this->shippingCarriers = ShippingCarrier::all();
-        $this->paymentMethods = PaymentMethod::all();
-        $this->calculateTotalPrice();
+        $user = auth()->user();
 
-        if ($this->paymentMethods->contains('type', 'stripe')) {
-            $this->hasStripe = true;
+        if ($user->addresses()->count()) {
+            $this->address = $user->addresses()->first();
         }
     }
 
     public function render()
     {
+        $user = auth()->user();
+
+        if ($this->addressId == -1) {
+            $this->address = new UserAddress;
+            $this->addressId = null;
+        } elseif ($this->addressId) {
+            $this->address = $user->addresses()->where('id', $this->addressId)->first();
+        }
+
+        $this->calculateTotalPrice();
+
         return view('livewire.shop.checkout')
-            ->with('countries', Countries::all()->pluck('name.common', 'cca2')->toArray());
+            ->with('addresses', $user->addresses)
+            ->with('countries', Countries::all()->pluck('name.common', 'cca2')->toArray())
+            ->with('shippingCarriers', ShippingCarrier::all())
+            ->with('paymentMethods', PaymentMethod::all());
     }
 
     public function save()
     {
         $this->validate();
 
-        $this->user->save();
-        $this->profile->save();
+        if (!$this->addressId || $this->addressId == -1) {
+            auth()->user()->addresses()->save($this->address);
+        } else {
+            $this->address->save();
+        }
 
         $order = $this->createOrder();
-
-        if ($this->stripePaymentMethod) {
-            session()->put('stripePaymentMethod', $this->stripePaymentMethod);
-        }
 
         redirect()->route('orders.pay', ['order' => $order]);
     }
@@ -83,7 +83,8 @@ class Checkout extends Component
     private function createOrder()
     {
         return Order::create(
-            $this->user,
+            auth()->user(),
+            $this->address,
             ShippingCarrier::find($this->shippingCarrierId),
             PaymentMethod::find($this->paymentMethodId),
             Cart::get()

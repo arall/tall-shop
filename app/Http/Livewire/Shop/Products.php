@@ -71,12 +71,11 @@ class Products extends Component
      * Add a product into the cart.
      *
      * @param integer $productId
-     * @param array $variantOptions
      * @return void
      */
-    public function addToCart(int $productId, array $variantOptions = [])
+    public function addToCart(int $productId)
     {
-        Cart::add($productId, $variantOptions);
+        Cart::add($productId);
         $this->emit('cartUpdated');
     }
 }

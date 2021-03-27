@@ -25,7 +25,7 @@ class Account extends Component
 
     public function render()
     {
-        return view('livewire.account.show')->layout('layouts.account');
+        return view('livewire.account.account')->layout('layouts.account');
     }
 
     public function saveProfile()

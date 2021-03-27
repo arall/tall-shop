@@ -7,87 +7,23 @@
                     {{ __('Shipping Information') }}
                 </h3>
                 <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                    <div class="sm:col-span-3">
-                        <x-label for="firstname">
-                            {{ __('First Name') }}
-                        </x-label>
-                        <x-input.text id="firstname" wire:model="user.name" />
-                        <x-error for="user.name" />
-                    </div>
 
-                    <div class="sm:col-span-3">
-                        <x-label for="lastname">
-                            {{ __('Last Name') }}
-                        </x-label>
-                        <x-input.text id="lastname" wire:model="profile.lastname" />
-                        <x-error for="profile.lastname" />
-                    </div>
-
-                    <div class="sm:col-span-3">
-                        <label for="phone" class="block text-sm font-medium text-gray-700">
-                            {{ __('Phone') }}
-                        </label>
-                        <div class="mt-1">
-                            <x-input.text id="phone" wire:model="profile.phone" />
-                            @error('profile.phone') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
-                        </div>
-                    </div>
-
-                    <div class="sm:col-span-3">
-                        <label for="country" class="block text-sm font-medium text-gray-700">
-                            {{ __('Country') }}
-                        </label>
-                        <div class="mt-1">
-                            <x-input.select id="country" wire:model="profile.country">
-                                @foreach ($countries as $id => $name)
-                                    <option value="{{ $name }}">
-                                        {{ $name }}
+                    @if(count($addresses))
+                        <x-input.group label="{{ __('Saved Addresses') }}" for="addressId" class="sm:col-span-6">
+                            <x-input.select id="addressId" wire:model="addressId">
+                                @foreach ($addresses as $address)
+                                    <option value="{{ $address->id }}">
+                                        {{ $address->getText() }}
                                     </option>
                                 @endforeach
+                                <option value="-1">
+                                    {{ __('Use a new address') }}
+                                </option>
                             </x-input.select>
-                            @error('profile.country') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
-                        </div>
-                    </div>
+                        </x-input.group>
+                    @endif
 
-                    <div class="sm:col-span-6">
-                        <label for="street_address" class="block text-sm font-medium text-gray-700">
-                            {{ __('Address') }}
-                        </label>
-                        <div class="mt-1">
-                            <x-input.text id="address" wire:model="profile.address" />
-                            @error('profile.address') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
-                        </div>
-                    </div>
-
-                    <div class="sm:col-span-2">
-                        <label for="city" class="block text-sm font-medium text-gray-700">
-                            {{ __('City') }}
-                        </label>
-                        <div class="mt-1">
-                            <x-input.text id="city" wire:model="profile.city" />
-                            @error('profile.city') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
-                        </div>
-                    </div>
-
-                    <div class="sm:col-span-2">
-                        <label for="state" class="block text-sm font-medium text-gray-700">
-                            {{ __('State / Province') }}
-                        </label>
-                        <div class="mt-1">
-                            <x-input.text id="state" wire:model="profile.region" />
-                            @error('profile.region') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
-                        </div>
-                    </div>
-
-                    <div class="sm:col-span-2">
-                        <label for="zip" class="block text-sm font-medium text-gray-700">
-                            {{ __('ZIP / Postal code') }}
-                        </label>
-                        <div class="mt-1">
-                            <x-input.text id="zip" wire:model="profile.zip" />
-                            @error('profile.zip') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
-                        </div>
-                    </div>
+                    @include('livewire.account.partials.address-form')
                 </div>
             </div>
 
@@ -199,14 +135,8 @@
             <!-- Continue -->
             <div>
                 <div class="flex justify-end">
-                    <x-button.primary wire:click="save" class="inline-flex items-center">
-                        <svg wire:loading wire:target="save" class="animate-spin w-4 h-4 mr-3 inline-block" ill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        <span>
-                            {{ __('Place order') }}
-                        </span>
+                    <x-button.primary wire:click="save" target="save">
+                        {{ __('Place order') }}
                     </x-button>
                 </div>
             </div>
