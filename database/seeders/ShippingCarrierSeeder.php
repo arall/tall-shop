@@ -16,6 +16,15 @@ class ShippingCarrierSeeder extends Seeder
     {
         ShippingCarrier::truncate();
 
-        ShippingCarrier::factory()->count(2)->create();
+        ShippingCarrier::firstOrCreate([
+            'name' => 'Free shipping',
+            'eta' => 72,
+        ]);
+
+        ShippingCarrier::firstOrCreate([
+            'name' => 'Express',
+            'price' => 10,
+            'eta' => 24,
+        ]);
     }
 }

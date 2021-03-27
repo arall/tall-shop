@@ -24,8 +24,8 @@
                     <x-input.password id="password" wire:model.lazy="password" />
                 </x-input.group>
 
-                <x-input.group label="{{ __('Confirm Password') }}" for="password_confirmation" error="true">
-                    <x-input.password id="password_confirmation" wire:model.lazy="password_confirmation" />
+                <x-input.group label="{{ __('Confirm Password') }}" for="passwordConfirmation" error="true">
+                    <x-input.password id="passwordConfirmation" wire:model.lazy="passwordConfirmation" />
                 </x-input.group>
 
                 <div class="mt-6">
