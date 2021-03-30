@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\ProductImage;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class ProductImageFactory extends Factory
 {
@@ -21,10 +22,11 @@ class ProductImageFactory extends Factory
      */
     public function definition()
     {
-        $imagePath = $this->faker->image(storage_path('app/public/images/products/original'));
+        $path = storage_path('app/public/images/products/original') . '/' . Str::random(8) . 'jpeg';
+        file_put_contents($path, file_get_contents('https://picsum.photos/800/600'));
 
         return [
-            'original_filename' => basename($imagePath),
+            'original_filename' => basename($path),
         ];
     }
 }
