@@ -16,6 +16,7 @@ class CreateUserInvoiceAddressesTable extends Migration
         Schema::create('user_invoice_addresses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
+            $table->boolean('favorite')->default(false);
             $table->string('vat');
             $table->string('firstname');
             $table->string('lastname');

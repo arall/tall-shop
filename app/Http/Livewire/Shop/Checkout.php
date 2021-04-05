@@ -38,7 +38,7 @@ class Checkout extends Component
         $this->address = new UserAddress;
 
         if ($user->addresses()->count()) {
-            $this->address = $user->addresses()->first();
+            $this->address = $user->addresses()->orderBy('favorite', 'DESC')->first();
         }
     }
 

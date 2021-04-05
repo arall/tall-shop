@@ -1,9 +1,9 @@
 <div class="space-y-6">
     <section>
-        <div class="bg-white pt-6 shadow sm:rounded-md sm:overflow-hidden">
+        <div class="pt-6 bg-white shadow sm:rounded-md sm:overflow-hidden">
             <div class="inline-block w-full px-4 sm:px-6">
                 <div class="float-left">
-                    <h2 class="text-lg leading-6 font-medium text-gray-900">
+                    <h2 class="text-lg font-medium leading-6 text-gray-900">
                         {{ __('Addresses') }}
                     </h2>
                 </div>
@@ -13,25 +13,27 @@
                     </x-button.primary>
                 </div>
             </div>
-            <div class="mt-6 flex flex-col">
+            <div class="flex flex-col mt-6">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                    <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                         <div class="overflow-hidden border-t border-gray-200">
                             @if (count($addresses))
-                                <ul class="relative divide-y divide-gray-200 border-b border-gray-200">
+                                <ul class="relative border-b border-gray-200 divide-y divide-gray-200">
                                     @foreach ($addresses as $address)
                                         <li
-                                            class="relative pl-4 pr-6 py-5 hover:bg-gray-50 sm:py-6 sm:pl-6 lg:pl-8 xl:pl-6">
+                                            class="relative py-5 pl-4 pr-6 hover:bg-gray-50 sm:py-6 sm:pl-6 lg:pl-8 xl:pl-6">
                                             <div class="flex items-center justify-between space-x-4">
                                                 <div class="min-w-0 space-y-3">
-                                                    <div class="relative group flex items-center">
+                                                    <div class="relative flex items-center group">
                                                         <button
-                                                            class="relative bg-white rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-2"
+                                                            x-data="{ favorite: {{ $address->favorite }}}"
+                                                            wire:click="favorite({{ $address->id }})"
+                                                            class="relative mr-2 bg-white rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                                             type="button">
-                                                            <svg class="text-yellow-300 hover:text-yellow-400 h-5 w-5"
+                                                            <svg
+                                                                :class="{ 'text-yellow-300': favorite == 1, 'text-gray-300': favorite == 0}"
+                                                                class="w-5 h-5 hover:text-yellow-400"
                                                                 x-state:on="Starred" x-state:off="Not Starred"
-                                                                x-state-description="Starred: &quot;text-yellow-300 hover:text-yellow-400&quot;, Not Starred: &quot;text-gray-300 hover:text-gray-400&quot;"
-                                                                x-description="Heroicon name: solid/star"
                                                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                                                 fill="currentColor" aria-hidden="true">
                                                                 <path
@@ -40,17 +42,17 @@
                                                             </svg>
                                                         </button>
                                                         <span
-                                                            class="text-sm text-gray-500 group-hover:text-gray-900 font-medium truncate">
+                                                            class="text-sm font-medium text-gray-500 truncate group-hover:text-gray-900">
                                                             {{ $address->getText() }}
                                                         </span>
                                                     </div>
                                                 </div>
-                                                <div class="sm:flex flex-col flex-shrink-0 items-end space-y-3">
+                                                <div class="flex-col items-end flex-shrink-0 space-y-3 sm:flex">
                                                     <div x-data="{ open: false }" @keydown.escape.stop="open = false"
                                                         @click.away="open = false"
-                                                        class="relative flex justify-end items-center">
+                                                        class="relative flex items-center justify-end">
                                                         <button type="button"
-                                                            class="w-8 h-8 bg-white inline-flex items-center justify-center text-gray-400 rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                                                            class="inline-flex items-center justify-center w-8 h-8 text-gray-400 bg-white rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
                                                             @click="open = !open"
                                                             aria-haspopup="true" x-bind:aria-expanded="open">
                                                             <svg class="w-5 h-5"
@@ -71,13 +73,13 @@
                                                             x-transition:leave="transition ease-in duration-75"
                                                             x-transition:leave-start="transform opacity-100 scale-100"
                                                             x-transition:leave-end="transform opacity-0 scale-95"
-                                                            class="mx-3 origin-top-right absolute right-7 w-48 mt-1 rounded-md shadow-lg z-10 bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-200 focus:outline-none"
+                                                            class="absolute z-10 w-48 mx-3 mt-1 origin-top-right bg-white divide-y divide-gray-200 rounded-md shadow-lg right-7 ring-1 ring-black ring-opacity-5 focus:outline-none"
                                                             role="menu" aria-orientation="vertical"
                                                             style="display: none;">
                                                             <button wire:click="edit({{ $address->id }})"
-                                                                class="w-full group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                                class="flex items-center w-full px-4 py-2 text-sm text-gray-700 group hover:bg-gray-100 hover:text-gray-900"
                                                                 role="menuitem">
-                                                                <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                                                                <svg class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
                                                                     x-description="Heroicon name: solid/pencil-alt"
                                                                     xmlns="http://www.w3.org/2000/svg"
                                                                     viewBox="0 0 20 20" fill="currentColor"
@@ -92,9 +94,9 @@
                                                                 {{ __('Edit') }}
                                                             </button>
                                                             <button wire:click="destroy({{ $address->id }})" @click="open = false"
-                                                                class="w-full group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                                class="flex items-center w-full px-4 py-2 text-sm text-gray-700 group hover:bg-gray-100 hover:text-gray-900"
                                                                 role="menuitem">
-                                                                <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                                                                <svg class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
                                                                     x-description="Heroicon name: solid/trash"
                                                                     xmlns="http://www.w3.org/2000/svg"
                                                                     viewBox="0 0 20 20" fill="currentColor"
@@ -125,7 +127,7 @@
 
                                 </x-slot>
                                 <x-slot name="content">
-                                    <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                                    <div class="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6">
                                         <input type="hidden" wire:model="address.id">
 
                                         <x-account.forms.address :countries="$countries"/>

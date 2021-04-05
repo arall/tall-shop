@@ -40,6 +40,7 @@ class Addresses extends Component
 
     public function edit($id)
     {
+        $this->showModal = true;
         $this->address = $this->getById($id);
     }
 
@@ -62,6 +63,16 @@ class Addresses extends Component
     public function destroy($id)
     {
         $this->getById($id)->delete();
+    }
+
+    public function favorite($id)
+    {
+        $address = $this->getById($id);
+        if ($address->favorite) {
+            $address->setAsNonFavorite();
+        } else {
+            $address->setAsFavorite();
+        }
     }
 
     public function getById($id)
