@@ -58,8 +58,8 @@ class Checkout extends Component
         return view('livewire.shop.checkout')
             ->with('addresses', $user->addresses)
             ->with('countries', Countries::all()->pluck('name.common', 'cca2')->toArray())
-            ->with('shippingCarriers', ShippingCarrier::all())
-            ->with('paymentMethods', PaymentMethod::all());
+            ->with('shippingCarriers', ShippingCarrier::enabled()->get())
+            ->with('paymentMethods', PaymentMethod::enabled()->get());
     }
 
     public function save()

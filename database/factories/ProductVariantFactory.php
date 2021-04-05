@@ -22,6 +22,7 @@ class ProductVariantFactory extends Factory
     public function definition()
     {
         return [
+            'status' => 1,
             'name' => $this->faker->unique()->word,
         ];
     }

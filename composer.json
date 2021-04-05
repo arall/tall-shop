@@ -20,7 +20,8 @@
         "livewire/livewire": "^2.4",
         "paypal/paypal-checkout-sdk": "^1.0",
         "pragmarx/countries": "^0.7.2",
-        "stripe/stripe-php": "^7.76"
+        "stripe/stripe-php": "^7.76",
+        "laravel/nova": "~3.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",
@@ -53,6 +54,12 @@
             "Tests\\": "tests/"
         }
     },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://nova.laravel.com"
+        }
+    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {

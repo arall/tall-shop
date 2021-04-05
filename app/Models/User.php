@@ -80,6 +80,6 @@ class User extends Authenticatable
      */
     public function invoiceAddresses()
     {
-        return $this->hasMany(UserAddress::class);
+        return $this->hasMany(UserInvoiceAddress::class);
     }
 }

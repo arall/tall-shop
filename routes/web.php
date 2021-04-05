@@ -92,4 +92,5 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->prefix('account/')->group(function () {
     Route::get('/', App\Http\Livewire\Account\Account::class)->name('account');
     Route::get('/addresses', App\Http\Livewire\Account\Addresses::class)->name('addresses');
+    Route::get('/invoice-addresses', App\Http\Livewire\Account\InvoiceAddresses::class)->name('invoice-addresses');
 });

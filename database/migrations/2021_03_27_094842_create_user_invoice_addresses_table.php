@@ -18,8 +18,7 @@ class CreateUserInvoiceAddressesTable extends Migration
             $table->foreignId('user_id')->constrained();
             $table->boolean('favorite')->default(false);
             $table->string('vat');
-            $table->string('firstname');
-            $table->string('lastname');
+            $table->string('name');
             $table->string('country');
             $table->string('region');
             $table->text('address');

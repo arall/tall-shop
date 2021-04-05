@@ -22,7 +22,7 @@ class ProductImageFactory extends Factory
      */
     public function definition()
     {
-        $path = storage_path('app/public/images/products/original') . '/' . Str::random(8) . 'jpeg';
+        $path = storage_path('app/public/images/products/original') . '/' . Str::random(8) . '.jpeg';
         file_put_contents($path, file_get_contents('https://picsum.photos/800/600'));
 
         return [

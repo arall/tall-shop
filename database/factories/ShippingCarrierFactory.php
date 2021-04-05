@@ -22,6 +22,7 @@ class ShippingCarrierFactory extends Factory
     public function definition()
     {
         return [
+            'status' => 1,
             'name' => $this->faker->unique()->word,
             'price' => $this->faker->randomFloat(2, 5, 10),
             'price_kg' => $this->faker->randomFloat(2, 1, 5),
