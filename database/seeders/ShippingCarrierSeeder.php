@@ -18,11 +18,13 @@ class ShippingCarrierSeeder extends Seeder
 
         ShippingCarrier::firstOrCreate([
             'name' => 'Free shipping',
+            'status' => 1,
             'eta' => 72,
         ]);
 
         ShippingCarrier::firstOrCreate([
             'name' => 'Express',
+            'status' => 1,
             'price' => 10,
             'eta' => 24,
         ]);

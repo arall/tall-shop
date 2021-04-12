@@ -12,6 +12,17 @@ class Order extends Model
     use HasFactory;
 
     /**
+     * Statuses
+     *
+     * @var array
+     */
+    const STATUSES = [
+        0 => 'Pending Payment',
+        1 => 'Payment Completed',
+        2 => 'Shipped',
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
