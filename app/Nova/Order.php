@@ -10,7 +10,7 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Panel;
 use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\HasMany;
 
 class Order extends Resource
 {
@@ -82,7 +82,7 @@ class Order extends Resource
                 Text::make('Track number')->hideFromIndex(),
             ]),
 
-            BelongsToMany::make('Products', 'orderProducts', OrderProduct::class),
+            HasMany::make('Products', 'orderProducts', OrderProduct::class),
         ];
     }
 }
