@@ -9,6 +9,7 @@ use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Number;
 
 class Product extends Resource
@@ -57,9 +58,6 @@ class Product extends Resource
             BelongsTo::make('Type', 'type', ProductType::class)
                 ->sortable(),
 
-            BelongsTo::make('Category', 'category', ProductCategory::class)
-                ->sortable(),
-
             Text::make('Name')
                 ->sortable(),
 
@@ -80,6 +78,8 @@ class Product extends Resource
                 ->sortable(),
 
             Textarea::make('Description'),
+
+            BelongsToMany::make('Product Categories', 'categories'),
 
             HasMany::make('Images', 'images', ProductImage::class),
 

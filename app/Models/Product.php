@@ -136,11 +136,11 @@ class Product extends Model
     /**
      * Get the product category.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function category()
+    public function categories()
     {
-        return $this->belongsTo(ProductCategory::class, 'category_id');
+        return $this->belongsToMany(ProductCategory::class, 'product_category', 'product_id', 'category_id');
     }
 
     /**

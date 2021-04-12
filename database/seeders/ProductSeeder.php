@@ -30,25 +30,30 @@ class ProductSeeder extends Seeder
         Storage::makeDirectory('public/images/products/original');
 
         $products = Product::factory()
-            ->for(ProductCategory::inRandomOrder()->first(), 'category')
             ->hasImages(3)
             ->count(10)
             ->create();
 
         foreach ($products as $product) {
             if (rand(0, 1) == 1) {
-                continue;
+                $categories = ProductCategory::inRandomOrder()->limit(rand(1, 2))->pluck('id');
+                if ($categories) {
+                    $product->categories()->sync($categories);
+                }
             }
-            $attribute = ProductVariant::inRandomOrder()->first();
-            for ($i = 0; $i <= rand(2, 4); $i++) {
-                ProductVariantOption::create([
-                    'product_id' => $product->id,
-                    'product_variant_id' => $attribute->id,
-                    'name' => $faker->unique()->word,
-                    'price' => $i == 0 ? 0 : $faker->numberBetween(10, 100),
-                    'sku' => $faker->unique()->isbn13,
-                    'weight' => $faker->randomDigitNotNull,
-                ]);
+
+            if (rand(0, 1) == 1) {
+                $attribute = ProductVariant::inRandomOrder()->first();
+                for ($i = 0; $i <= rand(2, 4); $i++) {
+                    ProductVariantOption::create([
+                        'product_id' => $product->id,
+                        'product_variant_id' => $attribute->id,
+                        'name' => $faker->unique()->word,
+                        'price' => $i == 0 ? 0 : $faker->numberBetween(10, 100),
+                        'sku' => $faker->unique()->isbn13,
+                        'weight' => $faker->randomDigitNotNull,
+                    ]);
+                }
             }
         }
     }

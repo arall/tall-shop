@@ -12,10 +12,10 @@ class ProductCategory extends Model
     /**
      * Get the related products.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function products()
     {
-        $this->hasMany(Product::class, 'category_id');
+        $this->belongsToMany(Product::class, 'product_category', 'category_id', 'product_id');
     }
 }

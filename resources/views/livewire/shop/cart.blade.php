@@ -1,20 +1,20 @@
-<div class="container mx-auto px-6">
-    <div class="lg:flex shadow-md my-10 bg-white text-gray-900">
+<div class="container px-6 mx-auto">
+    <div class="my-10 text-gray-900 bg-white shadow-md lg:flex">
 
         <!-- Cart -->
-        <div class="lg:w-3/4 px-10 py-10">
+        <div class="px-10 py-10 lg:w-3/4">
             @if(!empty($cart))
-                <h3 class="text-lg leading-6 font-medium">
+                <h3 class="text-lg font-medium leading-6">
                     {{ __('Shopping Cart') }}
                 </h3>
-                <div class="flex mt-10 mb-5 text-gray-400 font-semibold text-xs uppercase">
+                <div class="flex mt-10 mb-5 text-xs font-semibold text-gray-400 uppercase">
                     <h3 class="w-3/5">
                         {{ __('Product') }}
                     </h3>
-                    <h3 class="text-center w-1/5">
+                    <h3 class="w-1/5 text-center">
                         {{ __('Quantity') }}
                     </h3>
-                    <h3 class="text-center w-1/5">
+                    <h3 class="w-1/5 text-center">
                         {{ __('Price') }}
                     </h3>
                 </div>
@@ -29,17 +29,12 @@
                             </div>
                             <div class="block ml-4">
                                 <div>
-                                    <span class="font-bold text-sm">
+                                    <span class="text-sm font-bold">
                                         <a href="{{ route('product', $product) }}">
                                             {{ $product->name }}
                                         </a>
                                     </span>
                                 </div>
-                                @if ($product->category)
-                                    <span class="text-xs text-gray-500">
-                                        {{ $product->category->name }}
-                                    </span>
-                                @endif
                                 @if (count($item['option_ids']))
                                     <div>
                                         @foreach ($item['option_ids'] as $optionId)
@@ -56,22 +51,22 @@
                         <div class="flex justify-center w-1/5 text-gray-600">
                             <div class="flex items-center mt-2">
                                 <button wire:click="decrease('{{ $hash }}')" class="text-gray-500 focus:outline-none focus:text-gray-600">
-                                    <svg class="h-5 w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg class="w-5 h-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
                                         <path d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
                                 </button>
-                                <span class="text-gray-700 mx-2">
+                                <span class="mx-2 text-gray-700">
                                     {{ $item['units'] }}
                                 </span>
                                 <button wire:click="increase('{{ $hash }}')" class="text-gray-500 focus:outline-none focus:text-gray-600">
-                                    <svg class="h-5 w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg class="w-5 h-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
                                         <path d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
                                 </button>
                             </div>
                         </div>
 
-                        <div class="text-center w-1/5 text-sm whitespace-nowrap">
+                        <div class="w-1/5 text-sm text-center whitespace-nowrap">
                             <div class="font-semibold">
                                 @price($product->getPrice($item['option_ids']) * $item['units'])
                             </div>
@@ -80,10 +75,10 @@
                             </div>
                         </div>
 
-                        <span class="text-center font-semibold text-sm">
-                            <button class="w-5 float-right" wire:click="remove('{{ $hash }}')"
+                        <span class="text-sm font-semibold text-center">
+                            <button class="float-right w-5" wire:click="remove('{{ $hash }}')"
                                 title="{{ __('Remove') }}">
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="fill-current text-gray-500">
+                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="text-gray-500 fill-current">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </button>
@@ -110,25 +105,25 @@
         </div>
 
         <!-- Summary -->
-        <div class="lg:w-1/4 px-8 py-10">
-            <h3 class="text-lg leading-6 font-medium">
+        <div class="px-8 py-10 lg:w-1/4">
+            <h3 class="text-lg font-medium leading-6">
                 {{ __('Order Summary') }}
             </h3>
 
             <div class="mt-4">
                 {{ __('Have a coupon?') }}
-                <div class="mt-1 flex rounded-md shadow-sm">
+                <div class="flex mt-1 rounded-md shadow-sm">
                     <div class="relative flex items-stretch flex-grow focus-within:z-10">
                         <input type="text"
-                            class="focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-none rounded-l-md sm:text-sm border-gray-300">
+                            class="block w-full border-gray-300 rounded-none focus:ring-indigo-500 focus:border-indigo-500 rounded-l-md sm:text-sm">
                     </div>
                     <button
-                        class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+                        class="relative inline-flex items-center px-4 py-2 -ml-px space-x-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-r-md bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
                         <span>{{ __('Apply') }}</span>
                     </button>
                 </div>
             </div>
-            <div class="border-t mt-5 flex font-semibold justify-between py-6 text-sm uppercase">
+            <div class="flex justify-between py-6 mt-5 text-sm font-semibold uppercase border-t">
                 <span>
                     {{ __('Total Cost') }}
                 </span>
