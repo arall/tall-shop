@@ -82,4 +82,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserInvoiceAddress::class);
     }
+
+    /**
+     * Get the user orders.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

@@ -47,11 +47,15 @@ class Order extends Resource
             ID::make()->sortable(),
 
             Badge::make('Status', function () {
-                return \App\Models\Order::STATUSES[$this->status];
+                return $this->getStatus();
             })->map([
-                'Pending Payment' => 'danger',
+                'Pending Payment' => 'warning',
                 'Payment Completed' => 'info',
+                'In preparation' => 'info',
                 'Shipped' => 'success',
+                'Received' => 'success',
+                'On hold' => 'warning',
+                'Canceled' => 'danger',
             ]),
 
             BelongsTo::make('User')

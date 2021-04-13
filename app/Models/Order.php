@@ -19,7 +19,11 @@ class Order extends Model
     const STATUSES = [
         0 => 'Pending Payment',
         1 => 'Payment Completed',
-        2 => 'Shipped',
+        2 => 'In preparation',
+        3 => 'Shipped',
+        4 => 'Received',
+        6 => 'On hold',
+        7 => 'Canceled',
     ];
 
     /**
@@ -36,6 +40,16 @@ class Order extends Model
     const STATUS_NON_PAID = 0;
 
     const STATUS_PAID = 1;
+
+    /**
+     * Get status as string.
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return self::STATUSES[$this->status];
+    }
 
     /**
      * Create a new order.
