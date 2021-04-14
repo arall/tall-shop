@@ -36,4 +36,16 @@ return [
     */
 
     'tax_ratio' => env('SHOP_TAX_RATIO', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default taxes ratios
+    |--------------------------------------------------------------------------
+    |
+    | If set, when tax ratio cannot be obtained from user location,
+    | will set this property vaue as default value.
+    |
+    */
+
+    'tax_default_ratio' => env('SHOP_DEFAULT_TAX_RATIO', false),
 ];

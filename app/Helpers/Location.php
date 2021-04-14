@@ -17,26 +17,20 @@ class Location
      */
     public static function setLocation()
     {
-        if (self::hasLocation()) {
-            return;
-        }
-
         $position = IPLocation::get();
         if (!$position) {
             return;
         }
 
-        $country = $position->countryName;
+        $country = $position->countryCode;
         session()->put('location.country', $country);
 
         // Taxes based on user location?
         if (config('shop.taxes') && !config('shop.tax_ratio')) {
             $countries = new Countries();
             try {
-                session()->put(
-                    'location.tax',
-                    $countries->whereNameCommon($country)->first()->hydrateTaxes()->taxes->vat->rates->first()->amounts->last()->amount
-                );
+                $tax = $countries->where('cca2', $country)->first()->hydrateTaxes()->taxes->vat->rates->first()->amounts->last()->amount;
+                session()->put('location.tax', $tax);
             } catch (\Exception $e) {
                 // do nothing
             }
@@ -50,7 +44,7 @@ class Location
      */
     public static function hasLocation()
     {
-        return session()->exists('location.country');
+        return session()->exists('location.country') && session()->exists('location.tax');
     }
 
     /**

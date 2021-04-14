@@ -34,6 +34,14 @@ class Taxes
      */
     public static function getTaxRatio()
     {
-        return config('shop.tax_ratio') ?: Location::getTaxRatio();
+        if (config('shop.tax_ratio')) {
+            return config('shop.tax_ratio');
+        } elseif (Location::getTaxRatio()) {
+            return Location::getTaxRatio();
+        } elseif (config('shop.tax_default_ratio')) {
+            return config('shop.tax_default_ratio');
+        }
+
+        return 0;
     }
 }
