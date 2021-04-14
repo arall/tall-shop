@@ -7,6 +7,10 @@ use PragmaRX\Countries\Package\Countries;
 
 /**
  * Handles user location information.
+ *
+ * @todo SetLocation was called in a middleware,
+ * but doesn't seem to work in all environments,
+ * so I'm calling it in getTaxRatio and getCountry.
  */
 class Location
 {
@@ -38,16 +42,6 @@ class Location
     }
 
     /**
-     * Check if the user location is set on session.
-     *
-     * @return boolean
-     */
-    public static function hasLocation()
-    {
-        return session()->exists('location.country') && session()->exists('location.tax');
-    }
-
-    /**
      * Get the current user tax ratio based on country.
      *
      * Format in decimal: 0.21
@@ -56,6 +50,8 @@ class Location
      */
     public static function getTaxRatio()
     {
+        self::setLocation();
+
         return session()->get('location.tax') ?: 0;
     }
 
@@ -66,6 +62,8 @@ class Location
      */
     public static function getCountry()
     {
+        self::setLocation();
+
         return session()->get('location.country') ?: null;
     }
 }
