@@ -123,13 +123,25 @@
                     </button>
                 </div>
             </div>
-            <div class="flex justify-between py-6 mt-5 text-sm font-semibold uppercase border-t">
-                <span>
-                    {{ __('Total Cost') }}
-                </span>
-                <span>
-                    @price($totalPrice)
-                </span>
+            <div class="py-6 mt-5 space-y-5 text-sm uppercase border-t">
+                @if(App\Helpers\Taxes::areEnabled())
+                    <div class="flex justify-between">
+                        <span>
+                            {{ __('Taxes') }}
+                        </span>
+                        <span>
+                            @price($totalTaxes)
+                        </span>
+                    </div>
+                @endif
+                <div class="flex justify-between font-semibold">
+                    <span>
+                        {{ __('Total Cost') }}
+                    </span>
+                    <span>
+                        @price($totalPrice)
+                    </span>
+                </div>
             </div>
             <div class="float-right">
                 <x-button.link-primary href="{{ route('checkout') }}" loading="true">

@@ -4,6 +4,9 @@ namespace App\Helpers;
 
 use App\Models\Product;
 
+/**
+ * Handles user shopping cart.
+ */
 class Cart
 {
     /**
@@ -89,7 +92,28 @@ class Cart
         $total = 0;
         foreach (self::get() as $item) {
             $product = Product::find($item['product_id']);
-            $total += $product->getPrice($item['option_ids'])  * $item['units'];
+            $price = $product->getPrice($item['option_ids'])  * $item['units'];
+            if (!Taxes::productPricesContainTaxes()) {
+                $price += $price * Taxes::getTaxRatio();
+            }
+
+            $total += $price;
+        }
+
+        return $total;
+    }
+
+    /**
+     * Get total taxes.
+     *
+     * @return float
+     */
+    public static function getTotalTaxes()
+    {
+        $total = 0;
+        foreach (self::get() as $item) {
+            $product = Product::find($item['product_id']);
+            $total += ($product->getPrice($item['option_ids'])  * $item['units']) * Taxes::getTaxRatio();
         }
 
         return $total;

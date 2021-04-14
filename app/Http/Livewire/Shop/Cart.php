@@ -2,14 +2,14 @@
 
 namespace App\Http\Livewire\Shop;
 
-use App\Helpers\Cart as Helper;
+use App\Helpers\Cart as CartHelper;
 use Livewire\Component;
 
 class Cart extends Component
 {
     public $cart;
     public $totalPrice;
-    public $totalProducts;
+    public $totalTaxes;
 
     protected $listeners = [
         'cartUpdated' => 'render',
@@ -17,9 +17,9 @@ class Cart extends Component
 
     public function render()
     {
-        $this->cart = Helper::get();
-        $this->totalPrice = Helper::getTotalPrice();
-        $this->totalProducts = Helper::getTotalProducts();
+        $this->cart = CartHelper::get();
+        $this->totalPrice = CartHelper::getTotalPrice();
+        $this->totalTaxes = CartHelper::getTotalTaxes();
 
         return view('livewire.shop.cart');
     }
@@ -32,7 +32,7 @@ class Cart extends Component
      */
     public function increase(string $hash)
     {
-        Helper::increase($hash);
+        CartHelper::increase($hash);
         $this->emit('cartUpdated');
     }
 
@@ -47,7 +47,7 @@ class Cart extends Component
      */
     public function decrease(string $hash)
     {
-        Helper::decrease($hash);
+        CartHelper::decrease($hash);
         $this->emit('cartUpdated');
     }
 
@@ -59,7 +59,7 @@ class Cart extends Component
      */
     public function remove(string $hash)
     {
-        Helper::remove($hash);
+        CartHelper::remove($hash);
         $this->emit('cartUpdated');
     }
 
@@ -70,7 +70,7 @@ class Cart extends Component
      */
     public function empty()
     {
-        Helper::empty();
+        CartHelper::empty();
         $this->emit('cartUpdated');
     }
 }

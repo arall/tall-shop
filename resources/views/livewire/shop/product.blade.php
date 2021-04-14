@@ -100,9 +100,24 @@
                     </div>
                 @endif
                 <div class="flex justify-between">
-                    <span class="text-2xl font-medium text-gray-900 title-font">
-                        @price($price)
-                    </span>
+                    <div class="float-left">
+                        <span class="block text-2xl font-medium text-gray-900 title-font">
+                            <x-product.price :price="$price"/>
+                        </span>
+                        <span class="text-gray-600 text-small">
+                        @if(App\Helpers\Taxes::areEnabled())
+                            @if(App\Helpers\Taxes::productPricesContainTaxes())
+                                {{ __('Including taxes') }}
+                            @else
+                                {{ __('Excluding taxes') }}
+                            @endif
+                            @if(App\Helpers\Taxes::getTaxRatio())
+                                ({{ (App\Helpers\Taxes::getTaxRatio() * 100) }}%)
+                            @endif
+                        @endif
+                        </span>
+                    </div>
+
                     <x-button.primary wire:click="addToCart" class="inline-flex items-center">
                         <svg wire:loading wire:target="addToCart" class="inline-block w-4 h-4 mr-3 animate-spin" ill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

@@ -2,7 +2,8 @@
 
 namespace App\Http\Livewire\Shop;
 
-use App\Helpers\Cart;
+use App\Helpers\Cart as CartHelper;
+use App\Helpers\Taxes as TaxesHelper;
 use App\Models\PaymentMethod;
 use Livewire\Component;
 use PragmaRX\Countries\Package\Countries;
@@ -17,6 +18,7 @@ class Checkout extends Component
     public $shippingCarrierId;
     public $paymentMethodId;
     public $price;
+    public $taxes;
 
     protected $rules = [
         'address.firstname' => 'required|string',
@@ -89,23 +91,38 @@ class Checkout extends Component
             $this->address,
             ShippingCarrier::find($this->shippingCarrierId),
             PaymentMethod::find($this->paymentMethodId),
-            Cart::get()
+            CartHelper::get()
         );
     }
 
     public function calculateTotalPrice()
     {
-        $this->price = Cart::getTotalPrice();
+        $this->taxes = CartHelper::getTotalTaxes();
+        $this->price = CartHelper::getTotalPrice();
+
         if ($this->shippingCarrierId) {
             $shippingCarrier = ShippingCarrier::find($this->shippingCarrierId);
             if ($shippingCarrier) {
-                $this->price += $shippingCarrier->price;
+                $price = $shippingCarrier->price;
+                $tax = $shippingCarrier->price * TaxesHelper::getTaxRatio();
+                if (!TaxesHelper::productPricesContainTaxes()) {
+                    $price += $tax;
+                }
+                $this->price += $price;
+                $this->taxes += $tax;
             }
         }
+
         if ($this->paymentMethodId) {
             $paymentMethod = PaymentMethod::find($this->paymentMethodId);
             if ($paymentMethod) {
-                $this->price += $paymentMethod->price;
+                $price = $paymentMethod->price;
+                $tax = $paymentMethod->price * TaxesHelper::getTaxRatio();
+                if (!TaxesHelper::productPricesContainTaxes()) {
+                    $price += $tax;
+                }
+                $this->price += $price;
+                $this->taxes += $tax;
             }
         }
     }
