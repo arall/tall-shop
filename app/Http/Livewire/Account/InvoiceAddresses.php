@@ -9,18 +9,18 @@ use PragmaRX\Countries\Package\Countries;
 class InvoiceAddresses extends Component
 {
     public $addresses;
-    public UserInvoiceAddress $address;
+    public UserInvoiceAddress $invoiceAddress;
     public $showModal = false;
 
     protected $rules = [
-        'address.vat' => 'required|string',
-        'address.name' => 'required|string',
-        'address.country' => 'required|string',
-        'address.region' => 'required|string',
-        'address.city' => 'required|string',
-        'address.address' => 'required|string',
-        'address.zip' => 'required',
-        'address.phone' => 'required',
+        'invoiceAddress.vat' => 'required|string',
+        'invoiceAddress.name' => 'required|string',
+        'invoiceAddress.country' => 'required|string',
+        'invoiceAddress.region' => 'required|string',
+        'invoiceAddress.city' => 'required|string',
+        'invoiceAddress.address' => 'required|string',
+        'invoiceAddress.zip' => 'required',
+        'invoiceAddress.phone' => 'required',
     ];
 
     public function render()
@@ -35,26 +35,26 @@ class InvoiceAddresses extends Component
     public function create()
     {
         $this->showModal = true;
-        $this->address = new UserInvoiceAddress;
+        $this->invoiceAddress = new UserInvoiceAddress;
     }
 
     public function edit($id)
     {
         $this->showModal = true;
-        $this->address = $this->getById($id);
+        $this->invoiceAddress = $this->getById($id);
     }
 
     public function save()
     {
         $this->validate();
 
-        if ($this->address->id) {
+        if ($this->invoiceAddress->id) {
             // Check ownership
-            $this->getById($this->address->id);
+            $this->getById($this->invoiceAddress->id);
 
-            $this->address->save();
+            $this->invoiceAddress->save();
         } else {
-            auth()->user()->addresses()->save($this->address);
+            auth()->user()->invoiceAddresses()->save($this->invoiceAddress);
         }
 
         $this->showModal = false;

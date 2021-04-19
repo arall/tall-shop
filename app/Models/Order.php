@@ -54,10 +54,18 @@ class Order extends Model
     /**
      * Create a new order.
      *
+     * @todo Create the invoice.
+     *
      * @return Order
      */
-    static function create(User $user, UserAddress $address, ShippingCarrier $shippingCarrier, PaymentMethod $paymentMethod, array $cart)
-    {
+    static function create(
+        User $user,
+        UserAddress $address,
+        UserInvoiceAddress $invoiceAddress,
+        ShippingCarrier $shippingCarrier,
+        PaymentMethod $paymentMethod,
+        array $cart
+    ) {
         $order = new Order;
         $order->user()->associate($user);
         $order->shippingCarrier()->associate($shippingCarrier);

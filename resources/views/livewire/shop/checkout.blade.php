@@ -27,6 +27,35 @@
                 </div>
             </div>
 
+            <!-- Invoicing info -->
+            <div>
+                <h3 class="text-lg font-medium leading-6 text-gray-900">
+                    {{ __('Invoicing Information') }}
+                </h3>
+                <div class="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6">
+                    <x-input.group label="{{ __('Saved Addresses') }}" for="invoiceAddressId" class="sm:col-span-6">
+                        <x-input.select id="invoiceAddressId" wire:model="invoiceAddressId">
+                            <option value="-1">
+                                {{ __('Use the same as the shipping address') }}
+                            </option>
+                            <option value="-2">
+                                {{ __('Use a new address') }}
+                            </option>
+                            @foreach ($invoiceAddresses as $address)
+                                <option value="{{ $address->id }}">
+                                    {{ $address->getText() }}
+                                </option>
+                            @endforeach
+                        </x-input.select>
+                    </x-input.group>
+                </div>
+                @if($showInvoiceForm)
+                    <div class="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6" >
+                        <x-account.forms.invoice-address :countries="$countries"/>
+                    </div>
+                @endif
+            </div>
+
             <!-- Shipping method -->
             <div>
                 <h3 class="text-lg font-medium leading-6 text-gray-900">
