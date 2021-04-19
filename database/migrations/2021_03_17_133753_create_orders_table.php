@@ -15,7 +15,7 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->integer('status')->default(0);
+            $table->tinyInteger('status')->default(0);
 
             // User
             $table->foreignId('user_id');
@@ -37,8 +37,6 @@ class CreateOrdersTable extends Migration
             $table->string('city')->nullable();
             $table->string('region')->nullable();
             $table->string('phone')->nullable();
-
-            // Incoive details (pending)
 
             // Details
             $table->decimal('price');

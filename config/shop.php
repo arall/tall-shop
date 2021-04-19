@@ -19,11 +19,11 @@ return [
     |--------------------------------------------------------------------------
     |
     | If product prices contain Taxes, set this to true.
-    | If the taxes should be added in top of the product price, se this to false.
+    | If the taxes should be added in top of the product price, set this to false.
     |
     */
 
-    'product_price_contains_taxes' => env('SHOP_PRODUCT_TAXES', true),
+    'product_price_contains_taxes' => env('SHOP_PRODUCT_CONTAINS_TAXES', true),
 
     /*
     |--------------------------------------------------------------------------
