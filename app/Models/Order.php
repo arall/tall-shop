@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Notifications\Users\OrderConfirmation;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Notification;
+
 
 class Order extends Model
 {
@@ -109,6 +111,8 @@ class Order extends Model
         $this->status = self::STATUS_PAID;
         $this->payment_date = Carbon::now();
         $this->save();
+
+        Notification::send($this->user, new OrderConfirmation($this));
     }
 
     /**

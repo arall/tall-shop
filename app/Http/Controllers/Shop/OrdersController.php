@@ -45,6 +45,6 @@ class OrdersController extends Controller
 
         Cart::empty();
 
-        return 'Order paid!';
+        return route('order', ['order' => $order]);
     }
 }
