@@ -5,8 +5,7 @@ namespace Tests\Feature\Auth;
 use App\Models\User;
 use Tests\TestCase;
 use Livewire\Livewire;
-use Illuminate\Support\Facades\Hash;
-use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
@@ -134,5 +133,26 @@ class RegisterTest extends TestCase
             ->set('passwordConfirmation', 'not-password')
             ->call('register')
             ->assertHasErrors(['password' => 'same']);
+    }
+
+    /** @test */
+    function verification_email_is_sent()
+    {
+        Notification::fake();
+
+        Livewire::test('auth.register')
+            ->set('name', 'Tall Stack')
+            ->set('email', 'tallstack@example.com')
+            ->set('password', 'password')
+            ->set('passwordConfirmation', 'password')
+            ->call('register')
+            ->assertRedirect(route('home'));
+
+        $user = User::whereEmail('tallstack@example.com')->first();
+
+        Notification::assertSentTo(
+            [$user],
+            \Illuminate\Auth\Notifications\VerifyEmail::class
+        );
     }
 }
