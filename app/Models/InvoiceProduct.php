@@ -2,17 +2,20 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OrderProduct extends Model
+class InvoiceProduct extends Model
 {
+    use HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'product_id', 'variants', 'units', 'price', 'unit_price',
+        'product_id', 'product_name', 'variants', 'units', 'price', 'unit_price',
     ];
 
     /**
@@ -32,6 +35,16 @@ class OrderProduct extends Model
     public $timestamps = false;
 
     /**
+     * Get the Invoice.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function invoice()
+    {
+        return $this->belongsTo(Invoice::class);
+    }
+
+    /**
      * Get the product.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -39,15 +52,5 @@ class OrderProduct extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
-    }
-
-    /**
-     * Get the order.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function order()
-    {
-        return $this->belongsTo(Order::class);
     }
 }

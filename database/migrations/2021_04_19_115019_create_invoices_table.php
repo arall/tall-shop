@@ -20,9 +20,9 @@ class CreateInvoicesTable extends Migration
 
             $table->tinyInteger('status')->default(0);
             $table->string('number')->nullable();
-            $table->date('date');
+            $table->date('date')->nullable();
 
-            $table->string('vat');
+            $table->string('vat')->nullable();
             $table->string('name');
             $table->string('country');
             $table->string('region');
@@ -31,6 +31,7 @@ class CreateInvoicesTable extends Migration
             $table->string('zip');
             $table->string('phone');
 
+            $table->decimal('tax');
             $table->decimal('price_untaxed');
             $table->decimal('price');
 

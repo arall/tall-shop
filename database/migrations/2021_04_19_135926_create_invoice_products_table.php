@@ -26,11 +26,7 @@ class CreateInvoiceProductsTable extends Migration
             // Prices
             $table->integer('units');
             $table->decimal('unit_price');
-            $table->decimal('tax');
-            $table->decimal('price_untaxed');
             $table->decimal('price');
-
-            $table->timestamps();
         });
     }
 

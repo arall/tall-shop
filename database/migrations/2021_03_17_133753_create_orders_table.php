@@ -22,11 +22,9 @@ class CreateOrdersTable extends Migration
 
             // Shipping
             $table->foreignId('shipping_carrier_id');
-            $table->decimal('shipping_price')->nullable();
 
             // Payment
             $table->foreignId('payment_method_id');
-            $table->decimal('payment_method_price')->nullable();
 
             // Shipping details
             $table->string('firstname')->nullable();
@@ -38,8 +36,16 @@ class CreateOrdersTable extends Migration
             $table->string('region')->nullable();
             $table->string('phone')->nullable();
 
-            // Details
-            $table->decimal('price');
+            // Prices (Payment method + Shipping + Products)
+            $table->decimal('tax')->nullable();
+            $table->decimal('shipping_price_untaxed')->nullable();
+            $table->decimal('shipping_price')->nullable();
+            $table->decimal('payment_method_price_untaxed')->nullable();
+            $table->decimal('payment_method_price')->nullable();
+            $table->decimal('products_price_untaxed')->nullable();
+            $table->decimal('products_price')->nullable();
+            $table->decimal('total_price_untaxed')->nullable();
+            $table->decimal('total_price')->nullable();
 
             // Payment data
             $table->string('payment_ref')->nullable();

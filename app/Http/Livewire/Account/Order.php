@@ -10,6 +10,9 @@ class Order extends Component
 
     public function mount(\App\Models\Order $order)
     {
+        if ($order->user != auth()->user()) {
+            abort(404);
+        }
         $this->order = $order;
     }
 

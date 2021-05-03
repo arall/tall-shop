@@ -42,14 +42,14 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">
-                                            @price($order->price)
+                                            @price($order->total_price)
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">
-                                            <a href="{{ route('order', ['order' => $order]) }}">
+                                            <x-button.link-primary href="{{ route('order', ['order' => $order]) }}">
                                                 {{ __('Details') }}
-                                            </a>
+                                            </x-button.link-primary>
                                         </div>
                                     </td>
                                 </tr>

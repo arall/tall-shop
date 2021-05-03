@@ -8,14 +8,14 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Number;
 
-class OrderProduct extends Resource
+class InvoiceProduct extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\OrderProduct::class;
+    public static $model = \App\Models\InvoiceProduct::class;
 
     /**
      * Indicates if the resource should be displayed in the sidebar.
@@ -33,8 +33,10 @@ class OrderProduct extends Resource
     public function fields(Request $request)
     {
         return [
+            Text::make('Name'),
+
             BelongsTo::make('Product')
-                ->sortable(),
+                ->sortable()->nullable(),
 
             Text::make('Variants'),
 

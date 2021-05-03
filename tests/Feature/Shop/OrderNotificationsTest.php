@@ -8,7 +8,9 @@ use App\Models\Order;
 use App\Models\PaymentMethod;
 use App\Models\ShippingCarrier;
 use App\Models\User;
-use App\Notifications\Users\OrderConfirmation;
+use App\Notifications\Users\Orders\Confirmation;
+use App\Notifications\Users\Orders\InPreparation;
+use App\Notifications\Users\Orders\Shipped;
 use Database\Seeders\PaymentMethodSeeder;
 use Database\Seeders\ProductTypeSeeder;
 use Database\Seeders\ProductCategorySeeder;
@@ -16,12 +18,15 @@ use Database\Seeders\ShippingCarrierSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class OrderTest extends TestCase
+class OrderNotificationsTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function users_recieve_order_confirmation_email_after_order_is_paid()
+    private $order;
+
+    private $user;
+
+    private function init()
     {
         Notification::fake();
 
@@ -31,7 +36,8 @@ class OrderTest extends TestCase
         $this->seed(PaymentMethodSeeder::class);
 
         $product = Product::factory()->create();
-        $user = User::factory()
+
+        $this->user = $user = User::factory()
             ->hasAddresses(1)
             ->hasInvoiceAddresses(1)
             ->create();
@@ -44,17 +50,47 @@ class OrderTest extends TestCase
             ]
         ];
 
-        $order = Order::create(
-            $user,
+        $this->order = Order::create(
+            $this->user,
             $user->addresses()->first(),
-            $user->invoiceAddresses()->first(),
+            null,
             ShippingCarrier::first(),
             PaymentMethod::first(),
+            0.21,
             $cart
         );
+    }
 
-        $order->setAsPaid();
+    /** @test */
+    public function users_recieve_order_confirmation_email_after_order_is_paid()
+    {
+        $this->init();
 
-        Notification::assertSentTo([$user], OrderConfirmation::class);
+        $this->order->status = 1;
+        $this->order->save();
+
+        Notification::assertSentTo([$this->user], Confirmation::class);
+    }
+
+    /** @test */
+    public function users_recieve_order_in_preparation_email()
+    {
+        $this->init();
+
+        $this->order->status = 2;
+        $this->order->save();
+
+        Notification::assertSentTo([$this->user], InPreparation::class);
+    }
+
+    /** @test */
+    public function users_recieve_order_shipped_email()
+    {
+        $this->init();
+
+        $this->order->status = 3;
+        $this->order->save();
+
+        Notification::assertSentTo([$this->user], Shipped::class);
     }
 }

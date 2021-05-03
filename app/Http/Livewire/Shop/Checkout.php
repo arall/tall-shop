@@ -33,7 +33,7 @@ class Checkout extends Component
      *
      * @var int
      */
-    public $invoiceAddressId;
+    public $invoiceAddressId = 0;
 
     /**
      * Invoice Address data.
@@ -93,14 +93,14 @@ class Checkout extends Component
         'address.zip' => 'required',
         'address.phone' => 'required',
         // Invoice
-        'invoiceAddress.vat' => 'required_unless:invoiceAddressId,-1',
-        'invoiceAddress.name' => 'required_unless:invoiceAddressId,-1|string',
-        'invoiceAddress.phone' => 'required_unless:invoiceAddressId,-1',
-        'invoiceAddress.country' => 'required_unless:invoiceAddressId,-1|string',
-        'invoiceAddress.address' => 'required_unless:invoiceAddressId,-1|string',
-        'invoiceAddress.region' => 'required_unless:invoiceAddressId,-1|string',
-        'invoiceAddress.city' => 'required_unless:invoiceAddressId,-1|string',
-        'invoiceAddress.zip' => 'required_unless:invoiceAddressId,-1',
+        'invoiceAddress.vat' => 'required_unless:invoiceAddressId,0',
+        'invoiceAddress.name' => 'required_unless:invoiceAddressId,0|string',
+        'invoiceAddress.phone' => 'required_unless:invoiceAddressId,0',
+        'invoiceAddress.country' => 'required_unless:invoiceAddressId,0|string',
+        'invoiceAddress.address' => 'required_unless:invoiceAddressId,0|string',
+        'invoiceAddress.region' => 'required_unless:invoiceAddressId,0|string',
+        'invoiceAddress.city' => 'required_unless:invoiceAddressId,0|string',
+        'invoiceAddress.zip' => 'required_unless:invoiceAddressId,0',
         // Others
         'shippingCarrierId' => 'required|exists:shipping_carriers,id',
         'paymentMethodId' => 'required|exists:payment_methods,id',
@@ -108,11 +108,16 @@ class Checkout extends Component
 
     public function mount()
     {
+        if (empty(CartHelper::get())) {
+            return redirect()->route('products');
+        }
+
         $user = auth()->user();
 
         $this->address = new UserAddress;
         if ($user->addresses()->count()) {
             $this->address = $user->addresses()->orderBy('favorite', 'DESC')->first();
+            $this->addressId = $this->address->id;
         }
 
         $this->invoiceAddress = new UserInvoiceAddress();
@@ -122,14 +127,14 @@ class Checkout extends Component
     {
         $user = auth()->user();
 
-        if ($this->addressId == -1) {
+        if ($this->addressId === 0) {
             $this->address = new UserAddress;
         } elseif ($this->addressId) {
             $this->address = $user->addresses()->where('id', $this->addressId)->first();
         }
 
         $this->invoiceAddress = new UserInvoiceAddress;
-        if ($this->invoiceAddressId == -1) {
+        if (!$this->invoiceAddressId) {
             $this->showInvoiceForm = false;
         } elseif ($this->invoiceAddressId) {
             $this->showInvoiceForm = true;
@@ -152,20 +157,21 @@ class Checkout extends Component
     {
         $this->validate();
 
-        if ($this->addressId == -1) {
+        if ($this->addressId) {
             auth()->user()->addresses()->save($this->address);
         }
 
-        if (!$this->invoiceAddressId == -2) {
+        if ($this->invoiceAddressId) {
             auth()->user()->invoiceAddresses()->save($this->invoiceAddress);
         }
 
         $order = Order::create(
             auth()->user(),
             $this->address,
-            $this->invoiceAddress,
+            $this->invoiceAddressId ? $this->invoiceAddress : null,
             ShippingCarrier::find($this->shippingCarrierId),
             PaymentMethod::find($this->paymentMethodId),
+            TaxesHelper::getTaxRatio(),
             CartHelper::get()
         );
 

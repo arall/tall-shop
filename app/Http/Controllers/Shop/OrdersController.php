@@ -45,6 +45,6 @@ class OrdersController extends Controller
 
         Cart::empty();
 
-        return route('order', ['order' => $order]);
+        return redirect()->route('order', ['order' => $order]);
     }
 }

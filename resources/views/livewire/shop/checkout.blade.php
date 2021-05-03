@@ -16,7 +16,7 @@
                                         {{ $address->getText() }}
                                     </option>
                                 @endforeach
-                                <option value="-1">
+                                <option value="0">
                                     {{ __('Use a new address') }}
                                 </option>
                             </x-input.select>
@@ -35,10 +35,10 @@
                 <div class="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6">
                     <x-input.group label="{{ __('Saved Addresses') }}" for="invoiceAddressId" class="sm:col-span-6">
                         <x-input.select id="invoiceAddressId" wire:model="invoiceAddressId">
-                            <option value="-1">
+                            <option value="0">
                                 {{ __('Use the same as the shipping address') }}
                             </option>
-                            <option value="-2">
+                            <option value="-1">
                                 {{ __('Use a new address') }}
                             </option>
                             @foreach ($invoiceAddresses as $address)

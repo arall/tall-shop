@@ -44,7 +44,7 @@ class PaypalController extends Controller
                 'reference_id' => $order->id,
                 'amount' => [
                     'currency_code' => getenv('CURRENCY'),
-                    'value' => $order->price,
+                    'value' => $order->total_price,
                 ],
             ]],
             'application_context' => [

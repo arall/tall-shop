@@ -11,6 +11,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Panel;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\Select;
 
 class Order extends Resource
 {
@@ -58,6 +59,8 @@ class Order extends Resource
                 'Canceled' => 'danger',
             ]),
 
+            Select::make('Status')->options(\App\Models\Order::STATUSES)->onlyOnForms(),
+
             BelongsTo::make('User')
                 ->sortable(),
 
@@ -70,6 +73,7 @@ class Order extends Resource
             DateTime::make('Created At')->readOnly(),
 
             new Panel('Shipping Information', [
+                Text::make('Track number')->hideFromIndex(),
                 Text::make('Firstname')->hideFromIndex(),
                 Text::make('Lastname')->hideFromIndex(),
                 Text::make('Country')->hideFromIndex(),
@@ -79,11 +83,21 @@ class Order extends Resource
                 Text::make('Phone')->hideFromIndex(),
             ]),
 
+            new Panel('Pricing', [
+                Text::make('Tax')->readOnly(),
+                Currency::make('Shipping Price Untaxed')->readOnly(),
+                Currency::make('Shipping Price')->readOnly(),
+                Currency::make('Payment Method Price Untaxed')->readOnly(),
+                Currency::make('Payment Method Price')->readOnly(),
+                Currency::make('Products Price Untaxed')->readOnly(),
+                Currency::make('Products Price')->readOnly(),
+                Currency::make('Total Price Untaxed')->readOnly(),
+                Currency::make('Total Price')->readOnly(),
+            ]),
+
             new Panel('Payment Information', [
-                Currency::make('price')->readOnly(),
                 Text::make('Payment Ref')->hideFromIndex()->readOnly(),
                 DateTime::make('Payment Date')->hideFromIndex()->readOnly(),
-                Text::make('Track number')->hideFromIndex(),
             ]),
 
             HasMany::make('Products', 'orderProducts', OrderProduct::class),

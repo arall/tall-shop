@@ -4,7 +4,7 @@
             <div class="inline-block w-full px-4 sm:px-6">
                 <div class="float-left">
                     <h2 class="text-lg font-medium leading-6 text-gray-900">
-                        {{ __('Order') }} #{{ $order->id }}
+                        {{ __('Invoice') }} {{ $invoice->number }}
                     </h2>
                 </div>
             </div>
@@ -13,84 +13,38 @@
                     <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
                         <div class="sm:col-span-1">
                             <dt class="text-sm font-medium text-gray-500">
-                                {{  __('Status') }}
-                            </dt>
-                            <dd class="mt-1 text-sm text-gray-900">
-                                <x-order-status :order="$order"/>
-                            </dd>
-                        </div>
-                        <div class="sm:col-span-1">
-                            <dt class="text-sm font-medium text-gray-500">
                                 {{ __('Date') }}
                             </dt>
                             <dd class="mt-1 text-sm text-gray-900">
-                                {{ $order->created_at->format('jS F Y') }}
+                                {{ $invoice->created_at->format('jS F Y') }}
                             </dd>
                         </div>
                         <div class="sm:col-span-1">
                             <dt class="text-sm font-medium text-gray-500">
-                                {{ __('Payment Method') }}
+                                {{ __('Information') }}
                             </dt>
                             <dd class="mt-1 text-sm text-gray-900">
-                                {{ $order->paymentMethod->name }}
-                                @if($order->payment_method_price > 0)
-                                    @price($order->payment_method_price)
-                                @endif
+                                {{ $invoice->vat }} {{ $invoice->name }}<br>
+                                {{ $invoice->phone }}
+                                {{ $invoice->address }}<br>
+                                {{ $invoice->city }}, {{ $invoice->region }}, {{ $invoice->ip }}<br>
+                                {{ $invoice->country }}
                             </dd>
                         </div>
                         <div class="sm:col-span-1">
                             <dt class="text-sm font-medium text-gray-500">
-                                {{  __('Shipping Carrier') }}
+                                {{ __('Tax') }}
                             </dt>
                             <dd class="mt-1 text-sm text-gray-900">
-                                {{ $order->shippingCarrier->name }}
-                                @if($order->shipping_price > 0)
-                                    @price($order->shipping_price)
-                                @endif
+                                @price($invoice->total_price - $invoice->total_price_untaxed) ({{ $invoice->tax * 100 }}%)
                             </dd>
                         </div>
                         <div class="sm:col-span-1">
                             <dt class="text-sm font-medium text-gray-500">
-                                {{ __('Shipping Information') }}
+                                {{ __('Total Price') }}
                             </dt>
                             <dd class="mt-1 text-sm text-gray-900">
-                                {{ $order->firstname }} {{ $order->lastname }}<br>
-                                {{ $order->phone }}
-                                {{ $order->address }}<br>
-                                {{ $order->city }}, {{ $order->region }}, {{ $order->ip }}<br>
-                                {{ $order->country }}
-                            </dd>
-                        </div>
-                        <div class="sm:col-span-1">
-                            @if($order->invoice)
-                                <dt class="text-sm font-medium text-gray-500">
-                                    {{  __('Invoice') }}
-                                </dt>
-                                <dd class="mt-1 text-sm text-gray-900">
-                                    @if($order->invoice->isSubmitted())
-                                        <x-button.link href="{{ route('invoice', ['invoice' => $order->invoice]) }}">
-                                            {{ __('View invoice') }}
-                                        </x-button.link>
-                                    @else
-                                        {{ __('Invoice not submitted') }}
-                                    @endif
-                                </dd>
-                            @endif
-                        </div>
-                        <div class="sm:col-span-1">
-                            <dt class="text-sm font-medium text-gray-500">
-                                {{  __('Tax') }}
-                            </dt>
-                            <dd class="mt-1 text-sm text-gray-900">
-                                @price($order->total_price - $order->total_price_untaxed) ({{ $order->tax * 100 }}%)
-                            </dd>
-                        </div>
-                        <div class="sm:col-span-1">
-                            <dt class="text-sm font-medium text-gray-500">
-                                {{  __('Total Price') }}
-                            </dt>
-                            <dd class="mt-1 text-sm text-gray-900">
-                                @price($order->total_price)
+                                @price($invoice->total_price)
                             </dd>
                         </div>
                         <div class="sm:col-span-2">
@@ -117,36 +71,36 @@
                                     </thead>
                                     <tbody class="text-sm text-gray-900 bg-white divide-y divide-gray-200">
 
-                                    @foreach($order->orderProducts as $orderProduct)
+                                        @foreach($invoice->invoiceProducts as $invoiceProduct)
                                         <tr>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div>
-                                                    {{ $orderProduct->product->name }}
+                                                    {{ $invoiceProduct->product_name }}
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div>
-                                                    {{ implode(', ', $orderProduct->variants) }}
+                                                    {{ implode(', ', $invoiceProduct->variants) }}
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div>
-                                                    {{ $orderProduct->units }}
+                                                    {{ $invoiceProduct->units }}
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div>
-                                                    @price($orderProduct->unit_price + $orderProduct->unit_price * $order->tax)
+                                                    @price($invoiceProduct->unit_price + $invoiceProduct->unit_price * $invoice->tax)
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div>
-                                                    @price($orderProduct->price + $orderProduct->price * $order->tax)
+                                                    @price($invoiceProduct->price + $invoiceProduct->price * $invoice->tax)
                                                 </div>
                                             </td>
                                         </tr>
-                                    @endforeach
-                                </ul>
+                                        @endforeach
+                                        </ul>
                             </dd>
                         </div>
                     </dl>

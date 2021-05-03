@@ -123,31 +123,33 @@
                     </button>
                 </div>
             </div>
-            <div class="py-6 mt-5 space-y-5 text-sm uppercase border-t">
-                @if(App\Helpers\Taxes::areEnabled())
-                    <div class="flex justify-between">
+            @if(!empty($cart))
+                <div class="py-6 mt-5 space-y-5 text-sm uppercase border-t">
+                    @if(App\Helpers\Taxes::areEnabled())
+                        <div class="flex justify-between">
+                            <span>
+                                {{ __('Taxes') }}
+                            </span>
+                            <span>
+                                @price($totalTaxes)
+                            </span>
+                        </div>
+                    @endif
+                    <div class="flex justify-between font-semibold">
                         <span>
-                            {{ __('Taxes') }}
+                            {{ __('Total Cost') }}
                         </span>
                         <span>
-                            @price($totalTaxes)
+                            @price($totalPrice)
                         </span>
                     </div>
-                @endif
-                <div class="flex justify-between font-semibold">
-                    <span>
-                        {{ __('Total Cost') }}
-                    </span>
-                    <span>
-                        @price($totalPrice)
-                    </span>
                 </div>
-            </div>
-            <div class="float-right">
-                <x-button.link-primary href="{{ route('checkout') }}" loading="true">
-                    {{ __('Proceed to Checkout') }}
-                </x-button.link-primary>
-            </div>
+                <div class="float-right">
+                    <x-button.link-primary href="{{ route('checkout') }}" loading="true">
+                        {{ __('Proceed to Checkout') }}
+                    </x-button.link-primary>
+                </div>
+            @endif
         </div>
 
     </div>

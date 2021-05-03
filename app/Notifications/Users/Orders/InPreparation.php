@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notifications\Users;
+namespace App\Notifications\Users\Orders;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -8,7 +8,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\Order;
 
-class OrderConfirmation extends Notification
+class InPreparation extends Notification
 {
     use Queueable;
 
@@ -50,9 +50,9 @@ class OrderConfirmation extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject(__('Order confirmation'))
+            ->subject(__('Order in preparation'))
             ->greeting(__('Hi') . ' ' . $notifiable->name)
-            ->line(__('Your order has been confirmed!'));
+            ->line(__('Your order is being prepared to be shipped!'));
     }
 
     /**

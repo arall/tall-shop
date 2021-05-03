@@ -26,8 +26,6 @@ class CreateOrderProductsTable extends Migration
             $table->integer('units');
             $table->decimal('unit_price');
             $table->decimal('price');
-
-            $table->timestamps();
         });
     }
 
