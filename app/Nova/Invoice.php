@@ -62,10 +62,11 @@ class Invoice extends Resource
             BelongsTo::make('Order')
                 ->sortable(),
 
-            Date::make('Date')->readOnly(),
+            Date::make('Date')->sortable()->readOnly(),
 
             new Panel('Information', [
                 Text::make('Vat')->hideFromIndex(),
+                Text::make('Company')->hideFromIndex(),
                 Text::make('Name')->hideFromIndex(),
                 Text::make('Country')->hideFromIndex(),
                 Text::make('Address')->hideFromIndex(),
@@ -75,9 +76,9 @@ class Invoice extends Resource
             ]),
 
             new Panel('Pricing', [
-                Text::make('Tax')->readOnly(),
-                Currency::make('Price Untaxed')->readOnly(),
-                Currency::make('Price')->readOnly(),
+                Text::make('Tax')->sortable()->readOnly(),
+                Currency::make('Price Untaxed')->sortable()->readOnly(),
+                Currency::make('Price')->sortable()->readOnly(),
             ]),
 
             HasMany::make('Products', 'invoiceProducts', InvoiceProduct::class),

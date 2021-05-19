@@ -20,7 +20,7 @@ class CreateUserAddressesTable extends Migration
             $table->string('firstname');
             $table->string('lastname');
             $table->string('country');
-            $table->string('region');
+            $table->string('region')->nullable();
             $table->text('address');
             $table->string('city');
             $table->string('zip');

@@ -11,6 +11,7 @@ use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Trix;
 
 class Product extends Resource
 {
@@ -63,21 +64,23 @@ class Product extends Resource
 
             Text::make('Slug')
                 ->readonly()
-                ->sortable(),
+                ->sortable()
+                ->hideFromIndex(),
 
             Text::make('Sku')
-                ->sortable(),
+                ->sortable()
+                ->hideFromIndex(),
 
             Currency::make('Price')
                 ->sortable(),
 
-            Currency::make('Price Compare')
-                ->sortable(),
-
             Number::make('Weight')
-                ->sortable(),
+                ->sortable()
+                ->hideFromIndex(),
 
             Textarea::make('Description'),
+
+            Trix::make('Long Description'),
 
             BelongsToMany::make('Product Categories', 'categories'),
 

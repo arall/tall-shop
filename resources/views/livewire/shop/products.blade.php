@@ -1,5 +1,5 @@
 <div>
-    <div class="container px-12">
+    <div class="container px-6 mx-auto">
         <div class="relative max-w-lg mx-auto">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                 <svg class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none">
@@ -40,7 +40,7 @@
                         </h3>
                     </a>
                     <span class="mt-2 text-gray-500">
-                        <x-product.price :price="$product->price"/>
+                        <x-product.price :price="$product->getMinPrice()"/>
                     </span>
                 </div>
             </div>

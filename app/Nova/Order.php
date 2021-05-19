@@ -70,7 +70,7 @@ class Order extends Resource
             BelongsTo::make('Payment Method', 'paymentMethod', PaymentMethod::class)
                 ->sortable(),
 
-            DateTime::make('Created At')->readOnly(),
+            DateTime::make('Created At')->readOnly()->sortable(),
 
             new Panel('Shipping Information', [
                 Text::make('Track number')->hideFromIndex(),
@@ -84,15 +84,15 @@ class Order extends Resource
             ]),
 
             new Panel('Pricing', [
-                Text::make('Tax')->readOnly(),
-                Currency::make('Shipping Price Untaxed')->readOnly(),
-                Currency::make('Shipping Price')->readOnly(),
-                Currency::make('Payment Method Price Untaxed')->readOnly(),
-                Currency::make('Payment Method Price')->readOnly(),
-                Currency::make('Products Price Untaxed')->readOnly(),
-                Currency::make('Products Price')->readOnly(),
-                Currency::make('Total Price Untaxed')->readOnly(),
-                Currency::make('Total Price')->readOnly(),
+                Text::make('Tax')->readOnly()->hideFromIndex(),
+                Currency::make('Shipping Price Untaxed')->readOnly()->hideFromIndex(),
+                Currency::make('Shipping Price')->readOnly()->hideFromIndex(),
+                Currency::make('Payment Method Price Untaxed')->readOnly()->hideFromIndex(),
+                Currency::make('Payment Method Price')->readOnly()->hideFromIndex(),
+                Currency::make('Products Price Untaxed')->readOnly()->hideFromIndex(),
+                Currency::make('Products Price')->readOnly()->hideFromIndex(),
+                Currency::make('Total Price Untaxed')->readOnly()->hideFromIndex(),
+                Currency::make('Total Price')->readOnly()->sortable(),
             ]),
 
             new Panel('Payment Information', [

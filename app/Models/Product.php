@@ -60,6 +60,29 @@ class Product extends Model
     }
 
     /**
+     * Calculate the min total price with variant options.
+     *
+     * @return decimal
+     */
+    public function getMinPrice()
+    {
+        $price = $this->price;
+        $mins = [];
+
+        foreach ($this->options as $option) {
+            if (!isset($mins[$option->product_variant_id]) || $mins[$option->product_variant_id] >= $option->price) {
+                $mins[$option->product_variant_id] = $option->price;
+            }
+        }
+
+        foreach ($mins as $min) {
+            $price += $min;
+        }
+
+        return $price;
+    }
+
+    /**
      * Calculate the total price with variant options.
      *
      * @param  array $optionIds
@@ -87,7 +110,7 @@ class Product extends Model
     {
         $result = [];
         if ($this->options) {
-            foreach ($this->options as $option) {
+            foreach ($this->options()->orderBy('product_variant_id', 'ASC')->orderBy('price', 'ASC')->get() as $option) {
                 $result[$option->variant->id][] = $option;
             }
         }

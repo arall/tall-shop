@@ -29,6 +29,8 @@ class EmailVerificationController extends Controller
             event(new Verified(Auth::user()));
         }
 
+        flash(__('Email address confirmed successfully.'));
+
         return redirect(route('home'));
     }
 }

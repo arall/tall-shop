@@ -1,4 +1,4 @@
-<x-input.group label="{{ __('VAT') }}" for="invoiceAddress.vat" class="sm:col-span-3" error="true">
+<x-input.group label="{{ __('VAT Number (company)') }}" for="invoiceAddress.vat" class="sm:col-span-3" error="true">
     <x-input.text id="invoiceAddress.vat" wire:model.defer="invoiceAddress.vat" />
 </x-input.group>
 

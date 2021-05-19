@@ -49,10 +49,10 @@ class ProductImage extends Resource
             Avatar::make('Filename')
                 ->disk('public')
                 ->thumbnail(function () {
-                    return $this->getUrl('thumb');
+                    return $this->getUrl('thumb') . '?t=' . strtotime("now");;
                 })
                 ->preview(function () {
-                    return $this->getUrl('mid');
+                    return $this->getUrl('mid') . '?t=' . strtotime("now");
                 })
                 ->download(function ($request, $model, $disk) {
                     return Storage::disk($disk)->download($model->getPath('original'));

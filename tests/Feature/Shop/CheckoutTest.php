@@ -194,4 +194,46 @@ class CheckoutTest extends TestCase
             ->set('paymentMethodId', $paymentMethod->id)
             ->assertSee(number_format($total, 2, ',', '.') . getenv('CURRENCY_SIGN'));
     }
+
+    /** @test */
+    public function see_saved_shipping_addresses()
+    {
+        $this->seed(ProductTypeSeeder::class);
+        $this->seed(ProductCategorySeeder::class);
+
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $product = Product::factory()->create();
+
+        Livewire::test(ShopProduct::class, ['product' => $product])
+            ->call('addToCart', $product->id);
+
+        $address = $user->addresses()->factory->create();
+
+        Livewire::test(Checkout::class)
+            ->assertSee($address->getText());
+    }
+
+
+
+    /** @test */
+    public function see_saved_invoicing_addresses()
+    {
+        $this->seed(ProductTypeSeeder::class);
+        $this->seed(ProductCategorySeeder::class);
+
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $product = Product::factory()->create();
+
+        Livewire::test(ShopProduct::class, ['product' => $product])
+            ->call('addToCart', $product->id);
+
+        $address = $user->invoiceAddresses()->factory->create();
+
+        Livewire::test(Checkout::class)
+            ->assertSee($address->getText());
+    }
 }

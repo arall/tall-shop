@@ -23,9 +23,10 @@ class CreateInvoicesTable extends Migration
             $table->date('date')->nullable();
 
             $table->string('vat')->nullable();
-            $table->string('name');
+            $table->string('company')->nullable();
+            $table->string('name')->nullable();
             $table->string('country');
-            $table->string('region');
+            $table->string('region')->nullable();
             $table->text('address');
             $table->string('city');
             $table->string('zip');

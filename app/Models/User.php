@@ -55,6 +55,16 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Check if the user is admin.
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->admin == 1;
+    }
+
+    /**
      * Get the profile.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

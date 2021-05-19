@@ -30,6 +30,9 @@
 
     <body class="bg-gray-50">
         <x-menu/>
+
+        <livewire:flash-container/>
+
         @yield('body')
 
         @livewireScripts

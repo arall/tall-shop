@@ -110,10 +110,10 @@ class Invoice extends Model
      *
      * @return string
      */
-     public function getStatus()
-     {
-         return self::STATUSES[$this->status];
-     }
+    public function getStatus()
+    {
+        return self::STATUSES[$this->status];
+    }
 
     /**
      * Set the invoice as submitted.
@@ -124,8 +124,6 @@ class Invoice extends Model
         $this->date = Carbon::now();
         $this->number = $this->getNextNumber();
         $this->save();
-
-        $this->invoice->setAsSubmitted();
     }
 
     /**

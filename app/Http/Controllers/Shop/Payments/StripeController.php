@@ -31,7 +31,7 @@ class StripeController extends Controller
 
         $items[] = [
             'price_data' => [
-                'currency' => getenv('CURRENCY'),
+                'currency' => config('shop.currency'),
                 'unit_amount' => $order->shippingCarrier->price * 100,
                 'product_data' => [
                     'name' => __('Shipping: ') . $order->shippingCarrier->name,
@@ -42,7 +42,7 @@ class StripeController extends Controller
 
         $items[] = [
             'price_data' => [
-                'currency' => getenv('CURRENCY'),
+                'currency' => config('shop.currency'),
                 'unit_amount' => $order->paymentMethod->price * 100,
                 'product_data' => [
                     'name' => __('Payment method: ') . $order->paymentMethod->name,
@@ -54,7 +54,7 @@ class StripeController extends Controller
         foreach ($order->orderProducts as $orderProduct) {
             $items[] = [
                 'price_data' => [
-                    'currency' => getenv('CURRENCY'),
+                    'currency' => config('shop.currency'),
                     'unit_amount' => $orderProduct->price * 100,
                     'product_data' => [
                         'name' => $orderProduct->product->name,

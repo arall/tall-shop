@@ -87,18 +87,19 @@ class Checkout extends Component
         'address.firstname' => 'required|string',
         'address.lastname' => 'required|string',
         'address.country' => 'required|string',
-        'address.region' => 'required|string',
+        'address.region' => 'string',
         'address.city' => 'required|string',
         'address.address' => 'required|string',
         'address.zip' => 'required',
         'address.phone' => 'required',
         // Invoice
-        'invoiceAddress.vat' => 'required_unless:invoiceAddressId,0',
-        'invoiceAddress.name' => 'required_unless:invoiceAddressId,0|string',
+        'invoiceAddress.vat' => '',
+        'invoiceAddress.company' => 'string',
+        'invoiceAddress.name' => 'string',
         'invoiceAddress.phone' => 'required_unless:invoiceAddressId,0',
         'invoiceAddress.country' => 'required_unless:invoiceAddressId,0|string',
         'invoiceAddress.address' => 'required_unless:invoiceAddressId,0|string',
-        'invoiceAddress.region' => 'required_unless:invoiceAddressId,0|string',
+        'invoiceAddress.region' => 'string',
         'invoiceAddress.city' => 'required_unless:invoiceAddressId,0|string',
         'invoiceAddress.zip' => 'required_unless:invoiceAddressId,0',
         // Others
@@ -127,13 +128,10 @@ class Checkout extends Component
     {
         $user = auth()->user();
 
-        if ($this->addressId === 0) {
-            $this->address = new UserAddress;
-        } elseif ($this->addressId) {
+        if ($this->addressId) {
             $this->address = $user->addresses()->where('id', $this->addressId)->first();
         }
 
-        $this->invoiceAddress = new UserInvoiceAddress;
         if (!$this->invoiceAddressId) {
             $this->showInvoiceForm = false;
         } elseif ($this->invoiceAddressId) {
@@ -157,11 +155,11 @@ class Checkout extends Component
     {
         $this->validate();
 
-        if ($this->addressId) {
+        if (!$this->addressId) {
             auth()->user()->addresses()->save($this->address);
         }
 
-        if ($this->invoiceAddressId) {
+        if (!$this->invoiceAddressId == -1) {
             auth()->user()->invoiceAddresses()->save($this->invoiceAddress);
         }
 
@@ -180,33 +178,22 @@ class Checkout extends Component
 
     public function calculateTotalPrice()
     {
-        $this->taxes = CartHelper::getTotalTaxes();
         $this->price = CartHelper::getTotalPrice();
 
         if ($this->shippingCarrierId) {
             $shippingCarrier = ShippingCarrier::find($this->shippingCarrierId);
             if ($shippingCarrier) {
-                $price = $shippingCarrier->price;
-                $tax = $shippingCarrier->price * TaxesHelper::getTaxRatio();
-                if (!TaxesHelper::productPricesContainTaxes()) {
-                    $price += $tax;
-                }
-                $this->price += $price;
-                $this->taxes += $tax;
+                $this->price += TaxesHelper::calcPriceWithTax($shippingCarrier->price);
             }
         }
 
         if ($this->paymentMethodId) {
             $paymentMethod = PaymentMethod::find($this->paymentMethodId);
             if ($paymentMethod) {
-                $price = $paymentMethod->price;
-                $tax = $paymentMethod->price * TaxesHelper::getTaxRatio();
-                if (!TaxesHelper::productPricesContainTaxes()) {
-                    $price += $tax;
-                }
-                $this->price += $price;
-                $this->taxes += $tax;
+                $this->price += TaxesHelper::calcPriceWithTax($paymentMethod->price);
             }
         }
+
+        $this->taxes = TaxesHelper::calcTaxPrice($this->price);
     }
 }

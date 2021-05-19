@@ -20,6 +20,7 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->text('description')->nullable();
+            $table->text('long_description')->nullable();
             $table->string('sku')->nullable()->unique();
             $table->decimal('price')->default(0)->nullable();         // Price without tax & without discount
             $table->decimal('price_compare')->nullable();             // Discount %

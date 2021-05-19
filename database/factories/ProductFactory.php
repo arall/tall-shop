@@ -26,6 +26,7 @@ class ProductFactory extends Factory
             'type_id' => ProductType::inRandomOrder()->first()->id,
             'name' => $this->faker->unique()->sentence(3),
             'description' => $this->faker->text,
+            'long_description' => $this->faker->text(500),
             'sku' => $this->faker->unique()->isbn13,
             'price' => $this->faker->randomFloat(2, 10, 100),
             'price_compare' => rand(1, 3) == 3 ? $this->faker->randomNumber(2) : null,

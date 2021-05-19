@@ -19,6 +19,7 @@
         "laravel/nova": "~3.0",
         "laravel/tinker": "^2.5",
         "livewire/livewire": "^2.4",
+        "mattlibera/livewire-flash": "^0.5.0",
         "paypal/paypal-checkout-sdk": "^1.0",
         "pragmarx/countries": "^0.7.2",
         "stevebauman/location": "^6.1",

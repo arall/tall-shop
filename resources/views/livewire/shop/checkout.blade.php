@@ -159,6 +159,7 @@
                             {{ __('Taxes') }}
                         </span>
                         <span>
+                            ({{ App\Helpers\Taxes::getTaxRatio() * 100 }} %)
                             @price($taxes)
                         </span>
                     </div>

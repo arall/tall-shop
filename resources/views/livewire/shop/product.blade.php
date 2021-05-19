@@ -131,5 +131,8 @@
                 </div>
             </div>
         </div>
+        <div class="flex flex-wrap mx-auto mt-5 lg:w-4/5">
+            {!! $product->long_description !!}
+        </div>
     </div>
 </section>

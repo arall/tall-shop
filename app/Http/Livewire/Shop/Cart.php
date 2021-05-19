@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Shop;
 
 use App\Helpers\Cart as CartHelper;
+use App\Helpers\Taxes;
 use Livewire\Component;
 
 class Cart extends Component
@@ -19,7 +20,7 @@ class Cart extends Component
     {
         $this->cart = CartHelper::get();
         $this->totalPrice = CartHelper::getTotalPrice();
-        $this->totalTaxes = CartHelper::getTotalTaxes();
+        $this->totalTaxes = Taxes::calcTaxPrice($this->totalPrice);
 
         return view('livewire.shop.cart');
     }

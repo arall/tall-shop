@@ -44,4 +44,34 @@ class Taxes
 
         return 0;
     }
+
+    /**
+     * Adds (if necessary) the tax to a price.
+     *
+     * @param float $price
+     * @return float
+     */
+    public static function calcPriceWithTax($price)
+    {
+        if (self::areEnabled() && !self::productPricesContainTaxes()) {
+            return $price + ($price * self::getTaxRatio());
+        }
+
+        return $price;
+    }
+
+    /**
+     * Gets the tax total from a taxed price.
+     *
+     * @param float $price
+     * @return float
+     */
+    public static function calcTaxPrice($price)
+    {
+        if (self::areEnabled()) {
+            return $price * self::getTaxRatio();
+        }
+
+        return 0;
+    }
 }
