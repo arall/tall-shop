@@ -21,8 +21,13 @@ class Location
      */
     public static function setLocation()
     {
+        if (session()->has('location.country')) {
+            return;
+        }
+
         $position = IPLocation::get();
         if (!$position) {
+            session()->put('location.country', 'none');
             return;
         }
 

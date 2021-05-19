@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
         Paginator::defaultSimpleView('pagination::simple-default');
 
         Blade::directive('price', function ($expression) {
-            return "<?php echo number_format(($expression), 2, ',', '.') . getenv('CURRENCY_SIGN'); ?>";
+            return "<?php echo number_format(($expression), 2, ',', '.') . config('shop.currency_sign'); ?>";
         });
 
         Blade::directive('markdown', function ($expression) {
