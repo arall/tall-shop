@@ -17,10 +17,11 @@ class CreateUserInvoiceAddressesTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->boolean('favorite')->default(false);
-            $table->string('vat');
-            $table->string('name');
+            $table->string('vat')->nullable();
+            $table->string('company')->nullable();
+            $table->string('name')->nullable();
             $table->string('country');
-            $table->string('region');
+            $table->string('region')->nullable();
             $table->text('address');
             $table->string('city');
             $table->string('zip');

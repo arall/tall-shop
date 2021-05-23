@@ -83,7 +83,7 @@ class Invoice extends Model
 
         foreach ($order->orderProducts as $orderProduct) {
             $invoice->invoiceProducts()->create([
-                'product_name' => __('Shipping'),
+                'product_name' => __('Product'),
                 'product_id' => $orderProduct->product_id,
                 'variants' => $orderProduct->variants,
                 'units' => $orderProduct->units,

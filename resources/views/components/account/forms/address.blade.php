@@ -11,9 +11,9 @@
 </x-input.group>
 
 <x-input.group label="{{ __('Country') }}" for="address.country" class="sm:col-span-3" error="true">
-    <x-input.select id="address.country" wire:model.defer="address.country">
-        @foreach ($countries as $id => $name)
-            <option value="{{ $name }}">
+    <x-input.select id="address.country" wire:model="address.country">
+        @foreach ($countries as $code => $name)
+            <option value="{{ $code }}">
                 {{ $name }}
             </option>
         @endforeach

@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Shop;
 
 use App\Helpers\Cart as CartHelper;
 use App\Helpers\Taxes as TaxesHelper;
+use App\Helpers\Location as LocationHelper;
 use App\Models\PaymentMethod;
 use Livewire\Component;
 use PragmaRX\Countries\Package\Countries;
@@ -132,6 +133,13 @@ class Checkout extends Component
             $this->address = $user->addresses()->where('id', $this->addressId)->first();
         }
 
+        if (!$this->address->country) {
+            $this->address->country = LocationHelper::getCountry();
+        }
+        if (!$this->invoiceAddress->country) {
+            $this->invoiceAddress->country = LocationHelper::getCountry();
+        }
+
         if (!$this->invoiceAddressId) {
             $this->showInvoiceForm = false;
         } elseif ($this->invoiceAddressId) {
@@ -141,12 +149,13 @@ class Checkout extends Component
             }
         }
 
+        $this->setTaxByAddressCountry();
         $this->calculateTotalPrice();
 
         return view('livewire.shop.checkout')
             ->with('addresses', $user->addresses)
             ->with('invoiceAddresses', $user->invoiceAddresses)
-            ->with('countries', Countries::all()->pluck('name.common', 'cca2')->toArray())
+            ->with('countries', Countries::all()->pluck('name.common', 'cca2'))
             ->with('shippingCarriers', ShippingCarrier::enabled()->get())
             ->with('paymentMethods', PaymentMethod::enabled()->get());
     }
@@ -159,7 +168,7 @@ class Checkout extends Component
             auth()->user()->addresses()->save($this->address);
         }
 
-        if (!$this->invoiceAddressId == -1) {
+        if ($this->invoiceAddressId == -1) {
             auth()->user()->invoiceAddresses()->save($this->invoiceAddress);
         }
 
@@ -176,6 +185,23 @@ class Checkout extends Component
         redirect()->route('orders.pay', ['order' => $order]);
     }
 
+    /**
+     * Set the tax rate based on the introduced Invoice / Address country.
+     *
+     * @return void
+     */
+    public function setTaxByAddressCountry()
+    {
+        if ($this->invoiceAddressId != 0 && $this->invoiceAddress->country) {
+            LocationHelper::setLocation($this->invoiceAddress->country);
+        } elseif ($this->address->country) {
+            LocationHelper::setLocation($this->address->country);
+        }
+    }
+
+    /**
+     * Calculate the total price of the order.
+     */
     public function calculateTotalPrice()
     {
         $this->price = CartHelper::getTotalPrice();

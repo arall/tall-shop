@@ -17,12 +17,7 @@ And lastly, the `tax_default_ratio` will be the default tax ratio, in case user 
 Keep in mind that taxes are applied globaly on all products.
 
 # Todo / Pending
-* Calculate shipping price based on products weight.
-* Calculate payment method price based on total price.
-* Generate invoices as PDF.
-* Testing:
-* - Payment Methods
-* - Invoices 
+
 
 # Resources
 
