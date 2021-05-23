@@ -49,12 +49,30 @@ class Taxes
      * Adds (if necessary) the tax to a price.
      *
      * @param float $price
+     * @param float $taxRatio
      * @return float
      */
-    public static function calcPriceWithTax($price)
+    public static function calcPriceWithTax($price, $taxRatio = null)
     {
         if (self::areEnabled() && !self::productPricesContainTaxes()) {
-            return $price + ($price * self::getTaxRatio());
+            $taxRatio = $taxRatio ?: self::getTaxRatio();
+            return $price + ($price * $taxRatio);
+        }
+
+        return $price;
+    }
+
+    /**
+     * Removes (if necessary) the tax from a price.
+     *
+     * @param float $price
+     * @param float $taxRatio
+     * @return float
+     */
+    public static function calcPriceWithoutTax($price, $taxRatio = null)
+    {
+        if (self::areEnabled() && self::productPricesContainTaxes()) {
+            return self::calcTaxPrice($price, $taxRatio);
         }
 
         return $price;
@@ -64,12 +82,14 @@ class Taxes
      * Gets the tax total from a taxed price.
      *
      * @param float $price
+     * @param float $taxRatio
      * @return float
      */
-    public static function calcTaxPrice($price)
+    public static function calcTaxPrice($price, $taxRatio = null)
     {
         if (self::areEnabled()) {
-            return $price * self::getTaxRatio();
+            $taxRatio = $taxRatio ?: self::getTaxRatio();
+            return ($price * ($taxRatio / (1 + $taxRatio)));
         }
 
         return 0;

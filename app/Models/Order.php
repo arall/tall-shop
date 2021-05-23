@@ -68,6 +68,7 @@ class Order extends Model
      *
      * @todo Calculate shipping price based on products weight.
      * @todo Calculate payment method price based on total price.
+     * @todo Calculate untexed price for "tax already included" prices.
      *
      * @return Order
      */
@@ -80,15 +81,16 @@ class Order extends Model
 
         $order->shippingCarrier()->associate($shippingCarrier);
         $order->paymentMethod()->associate($paymentMethod);
-        $order->shipping_price_untaxed = $shippingCarrier->price;
-        $order->payment_method_price_untaxed = $paymentMethod->price;
-        $order->shipping_price = $order->shipping_price + ($order->shipping_price * $order->tax);
-        $order->payment_method_price = $order->payment_method_price_untaxed + ($order->payment_method_price_untaxed * $order->tax);
+        $order->shipping_price_untaxed = Taxes::calcPriceWithoutTax($shippingCarrier->price, $taxRatio);
+        $order->payment_method_price_untaxed = Taxes::calcPriceWithoutTax($paymentMethod->price, $taxRatio);
+        $order->shipping_price = Taxes::calcPriceWithTax($shippingCarrier->price, $taxRatio);
+        $order->payment_method_price = Taxes::calcPriceWithTax($paymentMethod->price, $taxRatio);
 
         $order->firstname = $user->name;
         $order->fill($address->toArray());
 
         $order->products_price_untaxed = 0;
+        $order->products_price = 0;
 
         $order->save();
 
@@ -100,18 +102,23 @@ class Order extends Model
                 $options[] = $option->variant->name . ': ' . $option->name;
             }
 
-            $order->products_price_untaxed += $product->getPrice($item['option_ids']);
+            $productUnitPriceUntaxed = Taxes::calcPriceWithoutTax($product->getPrice($item['option_ids']), $taxRatio);
+            $productTotalPriceUntaxed = $productUnitPriceUntaxed * $item['units'];
+            $order->products_price_untaxed += $productTotalPriceUntaxed;
+
+            $productUnitPrice = Taxes::calcPriceWithTax($product->getPrice($item['option_ids']), $taxRatio);
+            $productTotalPrice = $productUnitPrice * $item['units'];
+            $order->products_price += $productTotalPrice;
 
             $order->orderProducts()->create([
                 'product_id' => $product->id,
                 'variants' => $options,
                 'units' => $item['units'],
-                'unit_price' => $product->getPrice($item['option_ids']),
-                'price' => $product->getPrice($item['option_ids']) * $item['units'],
+                'unit_price' => $productUnitPriceUntaxed,
+                'price' => $productTotalPriceUntaxed,
             ]);
         }
 
-        $order->products_price = $order->products_price_untaxed + ($order->products_price_untaxed * $order->tax);
         $order->total_price_untaxed = $order->payment_method_price_untaxed + $order->shipping_price_untaxed + $order->products_price_untaxed;
         $order->total_price = $order->payment_method_price + $order->shipping_price + $order->products_price;
 
