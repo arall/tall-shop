@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\ProductCategory;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,5 +37,8 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('markdown', function ($expression) {
             return "<?php echo GrahamCampbell\Markdown\Facades\Markdown::convertToHtml($expression); ?>";
         });
+
+        // Product categories for menus
+        View::share('categories', ProductCategory::all());
     }
 }

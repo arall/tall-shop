@@ -1,138 +1,154 @@
-<section class="overflow-hidden text-gray-600 body-font">
-    <div class="container px-5 py-24 mx-auto">
-        <div class="flex flex-wrap mx-auto lg:w-4/5">
-
+<main class="mx-auto max-w-7xl sm:pt-16 sm:px-6 lg:px-8">
+    <div class="max-w-2xl mx-auto lg:max-w-none">
+        <!-- Product -->
+        <div class="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start">
             <!-- Image gallery -->
-            <div class="w-full mt-6 lg:w-1/2 lg:pl-10 lg:py-6 lg:mt-0"
-                x-data="{ current: {{ $product->cover ? $product->cover->id : 0 }} }">
-                <div class="object-cover object-center h-64 lg:h-auto">
-                    @foreach ($product->images as $image)
-                        <img
-                            x-show="current == {{ $image->id }}"
-                            @click="$dispatch('img-modal', {  imgModalSrc: '{{ $image->getUrl('large') }}' })"
-                            class="h-64 rounded cursor-pointer lg:h-auto"
-                            src="{{ $image->getUrl('mid') }}"
-                        >
-                    @endforeach
-                </div>
-                <div class="mt-5">
-                    @foreach ($product->images as $image)
-                        <img
-                            @click="current = {{ $image->id }}"
-                            class="float-left h-10 mr-5 cursor-pointer"
-                            src="{{ $image->getUrl('thumb') }}"
-                        >
-                    @endforeach
-                </div>
-            </div>
-
-            <!-- Image modal -->
-            <div x-data="{ imgModal : false, imgModalSrc : '' }">
-                <template @img-modal.window="imgModal = true; imgModalSrc = $event.detail.imgModalSrc;" x-if="imgModal">
-                    <div x-transition:enter="transition ease-out duration-300"
-                        x-transition:enter-start="opacity-0 transform scale-90"
-                        x-transition:enter-end="opacity-100 transform scale-100"
-                        x-transition:leave="transition ease-in duration-300"
-                        x-transition:leave-start="opacity-100 transform scale-100"
-                        x-transition:leave-end="opacity-0 transform scale-90" x-on:click.away="imgModalSrc = ''"
-                        class="fixed inset-0 z-50 flex items-center justify-center w-full p-2 overflow-hidden bg-black bg-opacity-75 h-100">
-                        <div @click.away="imgModal = ''" class="flex flex-col max-w-3xl max-h-full overflow-auto">
-                            <div class="z-50">
-                                <button @click="imgModal = ''"
-                                    class="float-right pt-2 pr-2 outline-none focus:outline-none">
-                                    <svg class="text-white fill-current " xmlns="http://www.w3.org/2000/svg" width="18"
-                                        height="18" viewBox="0 0 18 18">
-                                        <path
-                                            d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z">
-                                        </path>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div class="p-2">
-                                <img :alt="imgModalSrc" class="object-contain h-1/2-screen" :src="imgModalSrc">
-                            </div>
-                        </div>
-                    </div>
-                </template>
-            </div>
-
-            <!-- Product details -->
-            <div class="w-full mt-6 lg:w-1/2 lg:pl-10 lg:py-6 lg:mt-0">
-                <h1 class="mb-1 text-3xl font-medium text-gray-900 title-font">
-                    {{ $product->name }}
-                </h1>
-                @if($product->categories)
-                    <h3 class="mb-5 text-sm tracking-widest text-gray-500 title-font">
-                        {{  $product->categories->implode('name', ', ') }}
-                    </h3>
-                @endif
-                <p class="leading-relaxed">
-                    @markdown($product->description)
-                </p>
-                @if ($product->options)
-                    <div class="flex items-center pb-5 mt-6 mb-5 border-b-2 border-gray-100">
-                        @foreach ($product->groupedOptions() as $variantId => $options)
-                            @php $variant = App\Models\ProductVariant::find($variantId); @endphp
-                            <div class="flex items-center">
-                                <span class="mr-3">
-                                    {{ $variant->name }}
-                                </span>
-                                <div class="relative">
-                                    <x-input.select wire:change="changeOptions"
-                                        wire:model="optionIds.{{ $variant->id }}">
-                                        @foreach ($options as $option)
-                                            <option value="{{ $option->id }}">
-                                                {{ $option->name }}
-                                            </option>
-                                        @endforeach
-                                    </x-input.select>
-                                    <span
-                                        class="absolute top-0 right-0 flex items-center justify-center w-10 h-full text-center text-gray-600 pointer-events-none">
-                                        <svg fill="none" stroke="currentColor" stroke-linecap="round"
-                                            stroke-linejoin="round" stroke-width="2" class="w-4 h-4"
-                                            viewBox="0 0 24 24">
-                                            <path d="M6 9l6 6 6-6"></path>
-                                        </svg>
-                                    </span>
-                                </div>
-                            </div>
+            <div class="flex flex-col-reverse" x-data="{ current: {{ $product->cover ? $product->cover->id : 0 }} }">
+                <!-- Image selector -->
+                <div class="hidden w-full max-w-2xl mx-auto mt-6 sm:block lg:max-w-none">
+                    <div class="grid grid-cols-4 gap-6" aria-orientation="horizontal" role="tablist">
+                        @foreach ($product->images as $image)
+                            <img @click="current = {{ $image->id }}" alt=""
+                                class="relative flex items-center justify-center h-24 text-sm font-medium text-gray-900 uppercase bg-white rounded-md cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
+                                src="{{ $image->getUrl('thumb') }}">
                         @endforeach
                     </div>
+                </div>
+
+                <div class="w-full aspect-w-1 aspect-h-1">
+                    <!-- Tab panel, show/hide based on tab state. -->
+                    @foreach ($product->images as $image)
+                        <div id="tabs-2-panel-1" aria-labelledby="tabs-2-tab-1" role="tabpanel" tabindex="0">
+                            <img x-show="current == {{ $image->id }}" alt=""
+                                @click="$dispatch('img-modal', {  imgModalSrc: '{{ $image->getUrl('large') }}' })"
+                                class="object-cover object-center w-full h-full sm:rounded-lg"
+                                src="{{ $image->getUrl('mid') }}">
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <!-- Product info -->
+            <div class="px-4 mt-10 sm:px-0 sm:mt-16 lg:mt-0">
+                <h1 class="text-3xl font-extrabold tracking-tight text-gray-900">
+                    {{ $product->name }}
+                </h1>
+
+                @if ($product->categories)
+                    <h3 class="mb-5 text-sm tracking-widest text-gray-500 title-font">
+                        {{ $product->categories->implode('name', ', ') }}
+                    </h3>
                 @endif
-                <div class="flex justify-between">
-                    <div class="float-left">
-                        <span class="block text-2xl font-medium text-gray-900 title-font">
-                            <x-product.price :price="$price"/>
-                        </span>
-                        <span class="text-gray-600 text-small">
-                        @if(App\Helpers\Taxes::areEnabled())
-                            @if(App\Helpers\Taxes::productPricesContainTaxes())
+
+                <div class="mt-3">
+                    <h2 class="sr-only">
+                        {{ __('Product information') }}
+                    </h2>
+                    <p class="text-3xl text-gray-900">
+                        <x-product.price :price="$price" />
+                    </p>
+                    <span class="text-gray-600 text-small">
+                        @if (App\Helpers\Taxes::areEnabled())
+                            @if (App\Helpers\Taxes::productPricesContainTaxes())
                                 {{ __('Including taxes') }}
                             @else
                                 {{ __('Excluding taxes') }}
                             @endif
-                            @if(App\Helpers\Taxes::getTaxRatio())
-                                ({{ (App\Helpers\Taxes::getTaxRatio() * 100) }}%)
+                            @if (App\Helpers\Taxes::getTaxRatio())
+                                ({{ App\Helpers\Taxes::getTaxRatio() * 100 }}%)
                             @endif
                         @endif
-                        </span>
-                    </div>
-
-                    <x-button.primary wire:click="addToCart" class="inline-flex items-center">
-                        <svg wire:loading wire:target="addToCart" class="inline-block w-4 h-4 mr-3 animate-spin" ill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        <x-icon.cart wire:loading.remove wire:target="addToCart" class="w-4 h-4 mr-2" />
-                        <span>
-                            {{ __('Add to cart') }}
-                        </span>
-                    </x-button>
+                    </span>
                 </div>
+
+                <div class="mt-6">
+                    <h3 class="sr-only">Description</h3>
+
+                    <div class="space-y-6 text-base text-gray-700">
+                        @markdown($product->description)
+                    </div>
+                </div>
+
+                <form class="mt-6">
+                    @if ($product->options)
+                        <div>
+                            @foreach ($product->groupedOptions() as $variantId => $options)
+                                @php $variant = App\Models\ProductVariant::find($variantId); @endphp
+                                <h3 class="text-sm text-gray-600">
+                                    {{ $variant->name }}
+                                </h3>
+                                <x-input.select wire:change="changeOptions" class="mt-3"
+                                    wire:model="optionIds.{{ $variant->id }}">
+                                    @foreach ($options as $option)
+                                        <option value="{{ $option->id }}">
+                                            {{ $option->name }}
+                                        </option>
+                                    @endforeach
+                                </x-input.select>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    <div class="flex mt-10 sm:flex-col1">
+                        <x-button.primary wire:click="addToCart"
+                            class="flex items-center justify-center flex-1 max-w-xs px-8 py-3 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 sm:w-full">
+                            <svg wire:loading wire:target="addToCart" class="inline-block w-4 h-4 mr-3 animate-spin"
+                                ill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                            <x-icon.cart wire:loading.remove wire:target="addToCart" class="w-4 h-4 mr-2" />
+                            <span>
+                                {{ __('Add to cart') }}
+                            </span>
+                            </x-button>
+                    </div>
+                </form>
+
+                <section aria-labelledby="details-heading" class="mt-12">
+                    <h2 id="details-heading" class="sr-only">
+                        {{ __('Additional details') }}
+                    </h2>
+
+                    <div class="border-t divide-y divide-gray-200" x-data="{ open: true }">
+                        <div>
+                            <h3>
+                                <!-- Expand/collapse question button -->
+                                <button type="button" x-on:click="open = ! open"
+                                    class="relative flex items-center justify-between w-full py-6 text-left group"
+                                    aria-controls="disclosure-1" aria-expanded="false">
+                                    <!-- Open: "text-indigo-600", Closed: "text-gray-900" -->
+                                    <span class="text-sm font-medium text-gray-900">
+                                        {{ __('More details') }}
+                                    </span>
+                                    <span class="flex items-center ml-6">
+                                        <svg class="block w-6 h-6 text-gray-400 group-hover:text-gray-500" x-show="open"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                        </svg>
+                                        <svg class="block w-6 h-6 text-indigo-400 group-hover:text-indigo-500"
+                                            x-show="! open" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M18 12H6" />
+                                        </svg>
+                                    </span>
+                                </button>
+                            </h3>
+                            <div x-show="open" class="pb-6 prose-sm prose" id="disclosure-1">
+                                {!! $product->long_description !!}
+                            </div>
+                        </div>
+
+                        <!-- More sections... -->
+                    </div>
+                </section>
             </div>
         </div>
-        <div class="flex flex-wrap mx-auto mt-5 lg:w-4/5">
-            {!! $product->long_description !!}
-        </div>
     </div>
-</section>
+</main>

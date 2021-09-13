@@ -26,29 +26,15 @@ class Cart extends Component
     }
 
     /**
-     * Increase the quantity of a product.
+     * Change the quantity of a product.
      *
      * @param string $hash
+     * @param int $quantity
      * @return void
      */
-    public function increase(string $hash)
+    public function changeQuantity(string $hash, int $quantity)
     {
-        CartHelper::increase($hash);
-        $this->emit('cartUpdated');
-    }
-
-    /**
-     * Decrease the quantity of a product.
-     *
-     * Triggers the cartUpdated event, as the product
-     * might be removed entirely if the quantity is below 1.
-     *
-     * @param string $hash
-     * @return void
-     */
-    public function decrease(string $hash)
-    {
-        CartHelper::decrease($hash);
+        CartHelper::changeQuantity($hash, $quantity);
         $this->emit('cartUpdated');
     }
 

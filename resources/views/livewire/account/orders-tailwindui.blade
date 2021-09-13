@@ -1,0 +1,132 @@
+<main>
+    <div class="mx-auto max-w-7xl sm:px-2 lg:px-8">
+        <div class="max-w-2xl px-4 mx-auto lg:max-w-4xl lg:px-0">
+            <h1 class="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">
+                {{ 'Order history' }}
+            </h1>
+            <p class="mt-2 text-sm text-gray-500">
+                {{ __('Check the status of recent orders, manage returns, and discover similar
+                products') }}
+            </p>
+        </div>
+    </div>
+
+    <section aria-labelledby="recent-heading" class="mt-16">
+        <h2 id="recent-heading" class="sr-only">
+            {{ __('Recent orders') }}
+        </h2>
+        @if (count($orders))
+            <div class="mx-auto max-w-7xl sm:px-2 lg:px-8">
+                <div class="max-w-2xl mx-auto space-y-8 sm:px-4 lg:max-w-4xl lg:px-0">
+                    @foreach ($orders as $order)
+                        <div class="bg-white border-t border-b border-gray-200 shadow-sm sm:rounded-lg sm:border">
+                            <h3 class="sr-only">
+                                {{ __('Order placed on ') }}
+                                <time datetime="2021-07-06">Jul 6, 2021</time>
+                            </h3>
+
+                            <div
+                                class="flex items-center p-4 border-b border-gray-200 sm:p-6 sm:grid sm:grid-cols-4 sm:gap-x-6">
+                                <dl
+                                    class="grid flex-1 grid-cols-2 text-sm gap-x-6 sm:col-span-3 sm:grid-cols-3 lg:col-span-2">
+                                    <div>
+                                        <dt class="font-medium text-gray-900">
+                                            {{ __('Order number') }}
+                                        </dt>
+                                        <dd class="mt-1 text-gray-500">
+                                            {{ $order->id }}
+                                        </dd>
+                                    </div>
+                                    <div class="hidden sm:block">
+                                        <dt class="font-medium text-gray-900">
+                                            {{ __('Date placed') }}
+                                        </dt>
+                                        <dd class="mt-1 text-gray-500">
+                                            <time
+                                                datetime="{{ $order->created_at }}">{{ $order->created_at->toFormattedDateString() }}</time>
+                                        </dd>
+                                    </div>
+                                    <div>
+                                        <dt class="font-medium text-gray-900">
+                                            {{ __('Total amount') }}
+                                        </dt>
+                                        <dd class="mt-1 font-medium text-gray-900">
+                                            @price($order->total_price)
+                                        </dd>
+                                    </div>
+                                </dl>
+
+                                <div class="hidden lg:col-span-2 lg:flex lg:items-center lg:justify-end lg:space-x-4">
+                                    <x-button.link href="{{ route('order', ['order' => $order->id]) }}">
+                                        {{ __('View Order') }}
+                                    </x-button.link>
+                                    @if ($order->invoice && $order->invoice->isSubmitted())
+                                        <x-button.link href="{{ route('invoice', ['invoice' => $order->invoice]) }}">
+                                            {{ __('View Invoice') }}
+                                        </x-button.link>
+                                    @endif
+                                </div>
+
+                            </div>
+
+                            <!-- Products -->
+                            <h4 class="sr-only">
+                                {{ __('Items') }}
+                            </h4>
+                            <ul role="list" class="divide-y divide-gray-200">
+                                @foreach ($order->orderProducts as $orderProduct)
+                                    <li class="p-4 sm:p-6">
+                                        <div class="flex items-center sm:items-start">
+                                            <div
+                                                class="flex-shrink-0 w-20 h-20 overflow-hidden bg-gray-200 rounded-lg sm:w-40 sm:h-40">
+                                                <img src="{{ $orderProduct->product->getCoverUrl('thumb') }}" alt=""
+                                                    class="object-cover object-center w-full h-full">
+                                            </div>
+                                            <div class="flex-1 ml-6 text-sm">
+                                                <div class="font-medium text-gray-900 sm:flex sm:justify-between">
+                                                    <h5>
+                                                        {{ $orderProduct->product->name }}
+                                                    </h5>
+                                                    <p class="mt-2 sm:mt-0">
+                                                        @price($orderProduct->price + $orderProduct->price *
+                                                        $order->tax)
+                                                    </p>
+                                                </div>
+                                                <p class="hidden text-gray-500 sm:block sm:mt-2">
+                                                    {{ $orderProduct->product->description }}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-6 sm:flex sm:justify-between">
+                                            <div class="flex items-center">
+                                            </div>
+
+                                            <div
+                                                class="flex items-center pt-4 mt-6 space-x-4 text-sm font-medium border-t border-gray-200 divide-x divide-gray-200 sm:mt-0 sm:ml-4 sm:border-none sm:pt-0">
+                                                <div class="flex justify-center flex-1">
+                                                    <a href="#"
+                                                        class="text-indigo-600 whitespace-nowrap hover:text-indigo-500">View
+                                                        product</a>
+                                                </div>
+                                                <div class="flex justify-center flex-1 pl-4">
+                                                    <a href="#"
+                                                        class="text-indigo-600 whitespace-nowrap hover:text-indigo-500">Buy
+                                                        again</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @else
+            <div class="m-10 text-center text-gray-800">
+                {{ __('You didn\'t order anything yet.') }}
+            </div>
+        @endif
+    </section>
+</main>

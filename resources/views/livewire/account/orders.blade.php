@@ -13,16 +13,13 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
                             <tr>
-                                <th scope="col"
-                                    class="px-6 py-3">
+                                <th scope="col" class="px-6 py-3">
                                     {{ __('Id') }}
                                 </th>
-                                <th scope="col"
-                                    class="px-6 py-3">
+                                <th scope="col" class="px-6 py-3">
                                     {{ __('Status') }}
                                 </th>
-                                <th scope="col"
-                                    class="px-6 py-3">
+                                <th scope="col" class="px-6 py-3">
                                     {{ __('Price') }}
                                 </th>
                                 <th scope="col" class="relative px-6 py-3">
@@ -30,7 +27,7 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200 ">
-                            @foreach($orders as $order)
+                            @foreach ($orders as $order)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">
@@ -38,7 +35,7 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <x-order-status :order="$order"/>
+                                        <x-order-status :order="$order" />
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">

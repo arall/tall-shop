@@ -20,14 +20,14 @@ class Cart
     {
         $cart = self::get();
         $hash = md5($productId . '-' . json_encode($variantOptions));
-        $units = 1;
+        $quantity = 1;
         if (isset($cart[$hash])) {
-            $units = $cart[$hash]['units'] + 1;
+            $quantity = $cart[$hash]['quantity'] + 1;
         }
 
         $cart[$hash] = [
             'product_id' => $productId,
-            'units' => $units,
+            'quantity' => $quantity,
             'option_ids' => $variantOptions,
         ];
 
@@ -35,16 +35,17 @@ class Cart
     }
 
     /**
-     * Increase the units of a product.
+     * Change the quantity of a product.
      *
      * @param string $hash
+     * @param int $quantity
      * @return void
      */
-    public static function increase(string $hash)
+    public static function changeQuantity(string $hash, int $quantity)
     {
         $cart = self::get();
         if (isset($cart[$hash])) {
-            $cart[$hash]['units']++;
+            $cart[$hash]['quantity'] = $quantity;
         }
 
         session()->put('cart', $cart);
@@ -61,28 +62,6 @@ class Cart
     }
 
     /**
-     * Decrease the units of a product.
-     *
-     * If the unit is 0, the product will be removed.
-     *
-     * @param string $hash
-     * @return void
-     */
-    public static function decrease(string $hash)
-    {
-        $cart = self::get();
-        if (isset($cart[$hash])) {
-            if ($cart[$hash]['units'] == 1) {
-                unset($cart[$hash]);
-            } else {
-                $cart[$hash]['units']--;
-            }
-        }
-
-        session()->put('cart', $cart);
-    }
-
-    /**
      * Calculate the total price.
      *
      * @return float
@@ -92,7 +71,7 @@ class Cart
         $total = 0;
         foreach (self::get() as $item) {
             $product = Product::find($item['product_id']);
-            $price = $product->getPrice($item['option_ids']) * $item['units'];
+            $price = $product->getPrice($item['option_ids']) * $item['quantity'];
             $price = Taxes::calcPriceWithTax($price);
 
             $total += $price;
